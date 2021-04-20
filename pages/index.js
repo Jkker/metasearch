@@ -1,65 +1,92 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { PageSeo } from '@/components/SEO';
+import siteMetadata from '@/data/siteMetadata';
+import Footer from '@/layouts/Footer';
+import Header from '@/layouts/Header';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import React, { useRef, useState } from 'react';
+import Head from 'next/head';
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+export default function Home(props) {
+	const [searchKey, setSearchKey] = useState('');
+	const router = useRouter();
+	const searchBarRef = useRef();
+	const handleSearch = () => {
+		router.push({
+			pathname: 'search',
+			query: {
+				q: searchKey,
+			},
+		});
+	};
+	return (
+		<>
+			<Head>
+				<title>Metasearch</title>
+			</Head>
+			<PageSeo
+				title={siteMetadata.title}
+				description={siteMetadata.description}
+				url={siteMetadata.siteUrl}
+			/>
+			<Header override={'bg-transparent text-white'} />
+			<Footer />
+			<div className='index-container h-screen relative z-30  bg-gray-700 bg-cover bg-no-repeat bg-center image shadow-2xl'>
+				<div className='meta-search-index-page bg-transparent w-full h-full flex-center flex-col'>
+					<Image
+						className='logo-center mb-4 opacity-90'
+						src='/static/images/index-logo.png'
+						height={264 / 2}
+						width={1004 / 2}
+						alt='Metasearch Logo'
+					></Image>
+					<div className='meta-search-bar w-4/5 sm:max-w-lg relative '>
+						<input
+							aria-label='Metasearch'
+							placeholder='搜你所想'
+							type='text'
+							ref={searchBarRef}
+							onChange={(e) => setSearchKey(e.target.value)}
+							className='w-full  text-gray-100 shadow focus:shadow-xl bg-gray-100 dark:bg-gray-800 acrylic bg-opacity-40 dark:bg-opacity-50 rounded placeholder-gray-200 dark:placeholder-gray-500 h-10 p-3'
+							value={searchKey}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleSearch();
+								}
+							}}
+						/>
+						<button
+							onClick={() => handleSearch()}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleSearch();
+								}
+							}}
+						>
+							<svg
+								className='absolute w-5 h-5 text-gray-100 right-3 top-2.5 text-opacity-70'
+								xmlns='http://www.w3.org/2000/svg'
+								fill='none'
+								viewBox='0 0 24 24'
+								stroke='currentColor'
+							>
+								<path
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									strokeWidth={2}
+									d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+								/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<button
+					className='absolute z-20 bottom-0 bg-transparent w-full outline-none'
+					onClick={() => window.scroll(0, window.innerHeight)}
+				>
+					<i className='fas fa-angle-down fa-2x text-white pb-2 animate-bounce'></i>
+				</button>
+			</div>
+		</>
+	);
 }

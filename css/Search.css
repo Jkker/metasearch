@@ -1,0 +1,22 @@
+.dropdown-button {
+  height: 40px;
+  margin-left: 5px;
+  padding: 3px 11px;
+}
+.dropdown-button:first-of-type {
+  margin-left: 0;
+}
+.search-body-container .ant-tabs-nav {
+  margin: 0 10px !important;
+}
+.search-body-container .ant-tabs-content-holder,
+.search-body-container .ant-tabs-content {
+  width: 100vw;
+  flex-grow: 1;
+  display: flex;
+  align-items: stretch;
+}
+.search-bar-landing .ant-input-group-addon > button {
+  height: 34px;
+  width: 34px;
+}
