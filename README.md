@@ -1,8 +1,8 @@
 <p align="center">
   <a href="https://github.com/Jkker/metasearch">
-    <img src="https://pics-1304851365.file.myqcloud.com/img/metasearch-logo-full-black.png" alt="Logo" height=80>
+    <img src="https://pics-1304851365.file.myqcloud.com/img/20210421013957.png" alt="Logo" height=80>
   </a>
-  <p align="center">https://pics-1304851365.cos.ap-nanjing.myqcloud.com/img/metasearch-logo-full-black.png
+  <p align="center">
     An aggregated search engine with high usability and customizability.
     <br />
     <br />
