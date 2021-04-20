@@ -82,9 +82,6 @@ export default function Test(props) {
 
 	// Respond to route change events (back / forward button click)
 	useEffect(() => {
-		/* navigator.serviceWorker.register('/sw.js', { scope: '/search' }).catch(function (e) {
-      console.error('Error during service worker registration:', e)
-    }) */
 		const handleRouteChange = (url, { shallow }) => {
 			const query = querystring.parse(url.split('?').slice(1).join());
 			const newEng = query.engine ?? props.default.engine;
@@ -109,6 +106,7 @@ export default function Test(props) {
 		};
 	}, []);
 
+	// Change default engine based on geo-ip data
 	useEffect(() => {
 		const clientInCN = geoData?.country === 'CN' ? false : true;
 		const defaultEngine = clientInCN
@@ -197,9 +195,8 @@ export default function Test(props) {
 	const landingSearchBarRef = useRef(null);
 	const isMobile = mobile().any;
 	const platform = isMobile ? 'mobile' : 'desktop';
-
 	useEffect(() => {
-		if (!isMobile) {
+		if (!searchKey.current && !inputKey) {
 			landingSearchBarRef?.current?.focus?.();
 		}
 	}, [searchKey.current, engine.current]);
@@ -228,6 +225,112 @@ export default function Test(props) {
 		</Menu>
 	) : null;
 
+	const enginesList = frames('').map(({ title }) => title);
+	const linksList = links('').map(({ title }) => title);
+	const currLinkIdx = useRef(0);
+
+	// Keyboard shortcuts
+	useEffect(() => {
+		function onKeyDown(e) {
+			// console.log(e.key);
+			const key = e.key;
+			switch (key) {
+				// Search / refresh on enter
+				case 'Enter': {
+					handleSetSearch(inputKey);
+					break;
+				}
+				// Focus search bar on /
+				case '/': {
+					if (document.activeElement !== landingSearchBarRef.current) {
+						console.log('focus');
+						e.preventDefault();
+						landingSearchBarRef?.current?.focus?.();
+					}
+
+					break;
+				}
+				// Unfocus search bar on escape
+				case 'Escape': {
+					console.log('blur');
+					e.preventDefault();
+					landingSearchBarRef?.current?.blur?.();
+					break;
+				}
+				case 'ArrowRight': {
+					if (document.activeElement !== landingSearchBarRef.current) {
+						if (e.ctrlKey && e.shiftKey) {
+							break;
+						} else if (e.ctrlKey) {
+							// Switch to the next tab on ctrl + right arrow
+							e.preventDefault();
+							const currEngIdx = enginesList.indexOf(engine.current);
+							handleSetEngine(enginesList[currEngIdx + 1] ?? enginesList[0]);
+						} else if (e.shiftKey) {
+							// Switch to the next link on ctrl + right arrow
+							e.preventDefault();
+							document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur();
+							const nextIdx =
+								currLinkIdx.current + 1 >= linksList.length ? 0 : currLinkIdx.current + 1;
+							currLinkIdx.current = nextIdx;
+							document.getElementById(linksList[nextIdx] + '-link')?.focus();
+						}
+					}
+					break;
+				}
+				case 'ArrowLeft': {
+					if (document.activeElement !== landingSearchBarRef.current) {
+						if (e.ctrlKey && e.altKey) {
+							break;
+						} else if (e.ctrlKey) {
+							// Switch to the previous tab on ctrl + left arrow
+							e.preventDefault();
+							const currEngIdx = enginesList.indexOf(engine.current);
+							handleSetEngine(enginesList[currEngIdx - 1] ?? enginesList[enginesList.length - 1]);
+						} else if (e.shiftKey) {
+							// Switch to the previous link on shift + left arrow
+							e.preventDefault();
+							document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur();
+							const nextIdx =
+								currLinkIdx.current - 1 < 0 ? linksList.length - 1 : currLinkIdx.current - 1;
+							currLinkIdx.current = nextIdx;
+							document.getElementById(linksList[nextIdx] + '-link')?.focus();
+						}
+					}
+					break;
+				}
+				// Auto focus on the 1st link
+				case 'Shift': {
+					if (document.activeElement !== landingSearchBarRef.current) {
+						e.preventDefault();
+						// currLinkIdx.current = 0;
+						document.getElementById(linksList[currLinkIdx.current] + '-link')?.focus();
+					}
+				}
+				default:
+					break;
+			}
+		}
+		// Open the currently focused link when shift key is released
+		function onKeyUp(e) {
+			// console.log('Released: ', e.key);
+			if (e.key === 'Shift' && document.activeElement !== landingSearchBarRef.current) {
+				e.preventDefault();
+				const currLink = document.getElementById(linksList[currLinkIdx.current] + '-link');
+				currLink.click();
+				currLink.blur();
+				// currLinkIdx.current = false;
+			}
+		}
+		document.addEventListener('keydown', onKeyDown);
+		document.addEventListener('keyup', onKeyUp);
+
+		return () => {
+			document.removeEventListener('keydown', onKeyDown);
+			document.removeEventListener('keyup', onKeyUp);
+		};
+	}, []);
+
 	return (
 		<div className='app-container flex flex-col h-screen w-screen'>
 			{/* Custom HTML head */}
@@ -251,85 +354,64 @@ export default function Test(props) {
 					</a>
 				</Link>
 				{/* Search Bar */}
-				<div className='flex-auto meta-search-bar relative'>
-					<input
-						aria-label='Metasearch'
-						placeholder='搜你所想'
-						type='text'
-						ref={landingSearchBarRef}
-						onChange={handleInputChange}
-						className='flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100 p-3 pr-8 text-base'
-						value={inputKey}
-						onKeyDown={({ key }) => {
-							switch (key) {
-								case 'Enter': {
-									handleSetSearch(inputKey);
-									break;
-								}
-								case 'Escape': {
-									handleReset();
-									break;
-								}
-								default:
-									break;
+				<div className='meta-search-bar flex-auto hover:shadow focus:shadow-md focus-within:shadow-md flex flex-nowrap'>
+					<div className='relative flex-auto'>
+						<input
+							aria-label='Metasearch'
+							placeholder='搜你所想'
+							type='text'
+							ref={landingSearchBarRef}
+							onChange={handleInputChange}
+							className='flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100 p-3 pr-8 text-base'
+							value={inputKey}
+						/>
+						{/* Search Bar Actions */}
+						<div className='absolute text-gray-800 dark:text-gray-100 right-3 top-0 text-opacity-70 flex items-center justify-evenly space-x-4 h-full'>
+							<button className='reset button' onClick={handleReset}>
+								<svg
+									className='w-3 h-3 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400'
+									aria-hidden='true'
+									focusable='false'
+									data-prefix='fas'
+									data-icon='times-circle'
+									role='img'
+									xmlns='http://www.w3.org/2000/svg'
+									viewBox='0 0 512 512'
+								>
+									<path
+										fill='currentColor'
+										d='M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z'
+									></path>
+								</svg>
+							</button>
+						</div>
+					</div>
+					<button
+						id='search'
+						className='rounded-sm rounded-l-none h-8 w-9 flex justify-center items-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 z-20'
+						onClick={() => handleSetSearch(inputKey)}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter') {
+								handleSetSearch(inputKey);
 							}
 						}}
-					/>
-					{/* Search Bar Actions */}
-					<div className='absolute text-gray-800 dark:text-gray-100 right-3 top-0 text-opacity-70 flex items-center justify-evenly space-x-4 h-full'>
-						<button
-							className='reset button'
-							onClick={handleReset}
-							onKeyDown={(e) => {
-								if (e.key === 'Escape') {
-									handleReset();
-								}
-							}}
-						>
-							<svg
-								className='w-3 h-3 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400'
-								aria-hidden='true'
-								focusable='false'
-								data-prefix='fas'
-								data-icon='times-circle'
-								role='img'
-								xmlns='http://www.w3.org/2000/svg'
-								viewBox='0 0 512 512'
-							>
-								<path
-									fill='currentColor'
-									d='M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z'
-								></path>
-							</svg>
-						</button>
-					</div>
-				</div>
-				{/* Search Button */}
-				<button
-					id='search'
-					className='rounded-sm rounded-l-none h-8 w-9 flex justify-center items-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 z-20'
-					onClick={() => handleSetSearch(inputKey)}
-					onKeyDown={(e) => {
-						if (e.key === 'Enter') {
-							handleSetSearch(inputKey);
-						}
-					}}
-				>
-					<svg
-						className='w-5 h-5 text-gray-900 dark:text-gray-100 text-opacity-70'
-						xmlns='http://www.w3.org/2000/svg'
-						fill='none'
-						viewBox='0 0 24 24'
-						stroke='currentColor'
 					>
-						<path
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							strokeWidth={2}
-							d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
-						/>
-					</svg>
-				</button>
+						<svg
+							className='w-5 h-5 text-gray-900 dark:text-gray-100 text-opacity-70'
+							xmlns='http://www.w3.org/2000/svg'
+							fill='none'
+							viewBox='0 0 24 24'
+							stroke='currentColor'
+						>
+							<path
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth={2}
+								d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+							/>
+						</svg>
+					</button>
+				</div>
 				<div className='h-full mx-2 border-l dark:border-gray-600'></div>
 				{/* Links Container */}
 				<div className='flex-0'>
@@ -349,6 +431,7 @@ export default function Test(props) {
 								<a
 									title={title}
 									key={title}
+									id={title + '-link'}
 									href={link}
 									target='_blank'
 									rel='noreferrer'

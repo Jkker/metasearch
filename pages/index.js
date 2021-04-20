@@ -5,7 +5,7 @@ import Header from '@/layouts/Header';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function Home(props) {
 	const [searchKey, setSearchKey] = useState('');
@@ -19,6 +19,40 @@ export default function Home(props) {
 			},
 		});
 	};
+	// Keyboard shortcuts
+	useEffect(() => {
+		function onKeyDown(e) {
+			// console.log(e.key);
+			const key = e.key;
+			switch (key) {
+				// Focus search bar on /
+				case '/': {
+					if (document.activeElement !== searchBarRef.current) {
+						console.log('focus');
+						e.preventDefault();
+						searchBarRef?.current?.focus?.();
+					}
+
+					break;
+				}
+				// Unfocus search bar on escape
+				case 'Escape': {
+					console.log('blur');
+					e.preventDefault();
+					searchBarRef?.current?.blur?.();
+					break;
+				}
+				default:
+					break;
+			}
+		}
+
+		document.addEventListener('keydown', onKeyDown);
+
+		return () => {
+			document.removeEventListener('keydown', onKeyDown);
+		};
+	}, []);
 	return (
 		<>
 			<Head>
