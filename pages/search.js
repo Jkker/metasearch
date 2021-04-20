@@ -340,16 +340,16 @@ export default function Test(props) {
 				</title>
 			</Head>
 			{/* Body */}
-			<div className='h-8 flex max-w-screen mt-2 justify-between items-center flex-nowrap text-center flex-none head-container bg-white dark:bg-gray-900 z-10'>
+			<div className='h-8 flex w-screen mt-2 justify-between items-center flex-nowrap text-center flex-none head-container bg-white dark:bg-gray-900 z-10'>
 				{/* Logo */}
 				<Link href='/'>
-					<a className='block my-1 mx-2 h-8 flex-none'>
+					<a className='z-20 my-1 mx-2 h-8 flex-none flex justify-center items-center'>
 						<Image
 							src='/static/images/search-logo.png'
 							alt='logo'
 							layout='fixed'
-							height={26}
-							width={26}
+							height={28}
+							width={28}
 						></Image>
 					</a>
 				</Link>
