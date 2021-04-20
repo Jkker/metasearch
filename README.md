@@ -2,7 +2,7 @@
   <a href="https://github.com/Jkker/metasearch">
     <img src="https://pics-1304851365.file.myqcloud.com/img/metasearch-logo-full-black.png" alt="Logo" height=80>
   </a>
-  <p align="center">
+  <p align="center">https://pics-1304851365.cos.ap-nanjing.myqcloud.com/img/metasearch-logo-full-black.png
     An aggregated search engine with high usability and customizability.
     <br />
     <br />
@@ -16,7 +16,7 @@
 
 
 <details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <summary><b style="display: inline-block">Table of Contents</b></summary>
   <ol>
     <li><a href="#about-the-project">About The Project ℹ</a></li>
 		<li><a href="#features">Features 🌟</a></li>
@@ -51,12 +51,12 @@ An aggregated search engine with high usability and customizability.
 
 * 🔍 **Search Aggregator**: Lookup a keyword at all mainstream search engines simultaneously!
 
-* 🖥 **Embedded Search Results**:  Search results from Google, Baidu, etc. are embedded on the current page with magic ✨. 
+* 🖥 **Embedded Search Results**:  Search results from Google, Baidu, etc. are embedded on the current page with magic ✨.
 *  📱 **Mobile-friendly**: Designed with responsiveness in mind! No more clunky pages on mobile devices.
-* 🌓 **Dark Mode**: Built-in dark mode support! Embedded sites that do not support dark modes can be masked by a filter on demand.  
-* 🚀 **Blazingly Fast**: 90+ Lighthouse speed index. Comparable to a native app after first visit. 
+* 🌓 **Dark Mode**: Built-in dark mode support! Embedded sites that do not support dark modes can be masked by a filter on demand.
+* 🚀 **Blazingly Fast**: 90+ Lighthouse speed index. Comparable to a native app after first visit.
 * ⌨ **Keyboard Shortcuts**: Navigate your search results with keyboard only! Checkout full list [here](#list-of-keyboard-shortcuts).
-* 🧰 **PWA**: Installable as a stand-alone [Progressive WebApp](https://web.dev/what-are-pwas/) on mobile or desktop devices! 
+* 🧰 **PWA**: Installable as a stand-alone [Progressive WebApp](https://web.dev/what-are-pwas/) on mobile or desktop devices!
 * ⚙ **Highly Customizable**: Search engines and links can be customized in `config.js`.
 
 * 🌎 **Localization**: Automatically set the default search engine based on user’s locale.
@@ -64,10 +64,10 @@ An aggregated search engine with high usability and customizability.
 ### Work in Progress 🚧
 
 - [ ] Runtime search engines & links customization.
-- [ ] Recommendation for optimal set of search engine url parameters. 
-- [ ] Authentication & customization storage. 
-- [ ] Web proxy for search engines. 
-- [ ] Reverse image search aggregator. 
+- [ ] Recommendation for optimal set of search engine url parameters.
+- [ ] Authentication & customization storage.
+- [ ] Web proxy for search engines.
+- [ ] Reverse image search aggregator.
 
 ### List of Keyboard Shortcuts ⌨
 
@@ -128,14 +128,14 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 ## License
-Distributed under the MIT License. 
+Distributed under the MIT License.
 
-## Contact 
+## Contact
 Email:
 
 [me@jerrykjia.com](mailto:me@jerrykjia.com)
 
-Project Link: 
+Project Link:
 
 https://github.com/Jkker/metasearch
 
