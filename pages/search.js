@@ -158,11 +158,12 @@ export default function Test(props) {
 			return;
 		} else {
 			if (DEBUG) {
-				console.log('Engine:', newEng);
+				console.log('Engine:', newEng, '; inputKey:', inputKey);
+				console.log('Engine:', newEng, '; searchKey:', searchKey.current);
 			}
 			engine.current = newEng;
 			router.push(
-				{ pathname: router.pathname, query: { q: inputKey, engine: newEng } },
+				{ pathname: router.pathname, query: { q: searchKey.current, engine: newEng } },
 				undefined,
 				{
 					shallow: true,
@@ -243,7 +244,6 @@ export default function Test(props) {
 				// Focus search bar on /
 				case '/': {
 					if (document.activeElement !== landingSearchBarRef.current) {
-						console.log('focus');
 						e.preventDefault();
 						landingSearchBarRef?.current?.focus?.();
 					}
@@ -252,7 +252,6 @@ export default function Test(props) {
 				}
 				// Unfocus search bar on escape
 				case 'Escape': {
-					console.log('blur');
 					e.preventDefault();
 					landingSearchBarRef?.current?.blur?.();
 					break;
