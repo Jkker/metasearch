@@ -28,13 +28,13 @@ export default function navbar({ override }) {
         </h1>
       </Link> */}
       <nav className="nav-bar flex items-center text-base leading-5">
-        {headerNavLinks.map((link) => (
+       {/*  {headerNavLinks.map((link) => (
           <ActiveLink key={link.title} href={link.href} activeClassName="active-link">
-            <a className="p-2 sm:p-3  hidden sm:block custom-link relative">{link.title}</a>
+            <a className="p-2 sm:p-3 custom-link relative">{link.title}</a>
           </ActiveLink>
-        ))}
+        ))} */}
         <ThemeSwitch override={override} className="ml-1 mr-1 sm:ml-4" />
-        <MobileNav override={override} />
+        {/* <MobileNav override={override} /> */}
       </nav>
     </header>
   )

@@ -2,10 +2,10 @@ import { PageSeo } from '@/components/SEO';
 import siteMetadata from '@/data/siteMetadata';
 import Footer from '@/layouts/Footer';
 import Header from '@/layouts/Header';
+import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
-import Head from 'next/head';
 
 export default function Home(props) {
 	const [searchKey, setSearchKey] = useState('');
@@ -34,7 +34,7 @@ export default function Home(props) {
 			<div className='index-container h-screen relative z-30  bg-gray-700 bg-cover bg-no-repeat bg-center image shadow-2xl'>
 				<div className='meta-search-index-page bg-transparent w-full h-full flex-center flex-col'>
 					<Image
-						className='logo-center mb-4 opacity-90'
+						className='logo-center ml-2 mb-2 sm:mb-4 opacity-90'
 						src='/static/images/index-logo.png'
 						height={264 / 2}
 						width={1004 / 2}
@@ -47,7 +47,7 @@ export default function Home(props) {
 							type='text'
 							ref={searchBarRef}
 							onChange={(e) => setSearchKey(e.target.value)}
-							className='w-full  text-gray-100 shadow focus:shadow-xl bg-gray-100 dark:bg-gray-800 acrylic bg-opacity-40 dark:bg-opacity-50 rounded placeholder-gray-200 dark:placeholder-gray-500 h-10 p-3'
+							className='w-full  text-gray-100 sm:shadow focus:shadow-md sm:focus:shadow-xl bg-gray-100 dark:bg-gray-800 acrylic bg-opacity-40 dark:bg-opacity-50 rounded placeholder-gray-200 dark:placeholder-gray-400 h-10 p-3 text-base mb-4 sm:mb-1'
 							value={searchKey}
 							onKeyDown={(e) => {
 								if (e.key === 'Enter') {

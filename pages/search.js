@@ -237,7 +237,7 @@ export default function Test(props) {
 				</title>
 			</Head>
 			{/* Body */}
-			<div className='h-9 flex max-w-screen mt-2 justify-between items-center flex-nowrap text-center flex-none head-container bg-white dark:bg-gray-900 z-10'>
+			<div className='h-8 flex max-w-screen mt-2 justify-between items-center flex-nowrap text-center flex-none head-container bg-white dark:bg-gray-900 z-10'>
 				{/* Logo */}
 				<Link href='/'>
 					<a className='block my-1 mx-2 h-8 flex-none'>
@@ -245,8 +245,8 @@ export default function Test(props) {
 							src='/static/images/search-logo.png'
 							alt='logo'
 							layout='fixed'
-							height={32}
-							width={32}
+							height={26}
+							width={26}
 						></Image>
 					</a>
 				</Link>
@@ -258,7 +258,7 @@ export default function Test(props) {
 						type='text'
 						ref={landingSearchBarRef}
 						onChange={handleInputChange}
-						className='flex-auto ring-opacity-50 w-full h-9 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100'
+						className='flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100 p-3 pr-8 text-base'
 						value={inputKey}
 						onKeyDown={({ key }) => {
 							switch (key) {
@@ -307,7 +307,7 @@ export default function Test(props) {
 				{/* Search Button */}
 				<button
 					id='search'
-					className='rounded-sm rounded-l-none h-9 w-9 flex justify-center items-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 z-20'
+					className='rounded-sm rounded-l-none h-8 w-9 flex justify-center items-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 z-20'
 					onClick={() => handleSetSearch(inputKey)}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter') {
@@ -336,7 +336,7 @@ export default function Test(props) {
 					{/* Mobile Links */}
 					<Dropdown overlay={menu} trigger={['click', 'hover']} className='md:hidden'>
 						<button
-							className='rounded-sm responsive-element h-9 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none '
+							className='rounded-sm responsive-element h-8 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none '
 							onClick={(e) => e.preventDefault()}
 						>
 							Links <LinkOutlined className='ml-1' />
@@ -352,7 +352,7 @@ export default function Test(props) {
 									href={link}
 									target='_blank'
 									rel='noreferrer'
-									className='rounded-sm responsive-element h-9 p-1 lg:p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center'
+									className='rounded-sm responsive-element h-8 p-1 lg:p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center'
 								>
 									{title} <LinkOutlined className='ml-1' />
 								</a>
