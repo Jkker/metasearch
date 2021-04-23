@@ -1,0 +1,35 @@
+GET http://localhost:4000/api/configs/ HTTP/1.1
+
+###
+POST http://localhost:4000/api/configs/default HTTP/1.1
+content-type: application/json
+
+{
+  "url": "https://s1.jerrykjia.com/search?q=%s",
+  "name": "Metasearch1",
+  "slug": "metasearch",
+  "priority": 100,
+  "blockedRegions": ["US"],
+  "locale": "zh",
+  "embeddable": false
+}
+
+###
+DELETE http://localhost:4000/api/configs/default/Metasearch1 HTTP/1.1
+
+###
+PATCH http://localhost:4000/api/configs/default/MM HTTP/1.1
+content-type: application/json
+
+{
+  "url": "https://search.jerrykjia.com/search?q=%s",
+  "name": "Metasearch",
+  "slug": "metasearch",
+  "priority": 100,
+  "blockedRegions": ["US"],
+  "locale": "zh",
+  "embeddable": false
+}
+
+###
+http://localhost:4000/api/test
