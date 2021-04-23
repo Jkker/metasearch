@@ -1,8 +1,12 @@
-import { frames, links } from '@/data/config-v1.js';
-import { LinkOutlined } from '@ant-design/icons';
+// import { frames, links } from '@/data/config-v1.js';
+import { LinkOutlined, SettingFilled } from '@ant-design/icons';
 import { Dropdown, Menu, Tabs } from 'antd';
 import mobile from 'ismobilejs';
+import dbConnect from 'lib/dbConnect.js';
+import dbInit from 'lib/dbInit.js';
+import parseConfig from 'lib/parseConfig.js';
 import { debounce } from 'lodash';
+import User from 'models/User.js';
 import { useTheme } from 'next-themes';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -12,69 +16,49 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 import ThemeSwitch from '../components/ThemeSwitch';
 const querystring = require('querystring');
+import SearchConfigModal from 'components/SearchConfigModal';
 
 export async function getServerSideProps(context) {
 	const { q, engine } = context.query;
 	// console.log('getServerSideProps: q=' + q + ' engine=' + engine)
+
+	await dbConnect();
+	await dbInit();
+
+	const user = await User.findOne({
+		username: 'default',
+	});
+	const config = user.config;
+	// console.log(typeof config);
+	// console.log(config);
+	const { links, frames } = parseConfig(JSON.parse(JSON.stringify(config)));
+	console.log(links, frames);
 	return {
 		props: {
 			default: {
 				q: q ?? '',
 				engine: engine ?? 'default',
 			},
+			links,
+			frames,
 		},
 	};
-	// const requestIp = require('request-ip')
-	// const clientIp = requestIp.getClientIp(context.req)
-	// const DEBUG = clientIp === '::1' || clientIp === '127.0.0.1'
-	/* if (engine) {
-    // Client declared default search engine
-    return {
-      props: {
-        default: {
-          q: q ?? '',
-          engine,
-        },
-        DEBUG,
-      },
-    }
-  } else {
-    // Use client's geoip to find the most appropriate default search engine
-    const { lookup } = require('geoip-country')
-
-    const DEFAULT_IP = '1.0.1.0' // CN
-    const geo = lookup(clientIp?.replace('::1', '')?.replace('127.0.0.1', '') || DEFAULT_IP) // Replace lan IP address with default IP address
-    const clientInCN = geo?.country === 'CN' ? false : true
-    const defaultEngine = clientInCN
-      ? frames('', clientInCN)[0].title
-      : frames('', clientInCN)[1].title
-
-    return {
-      props: {
-        default: {
-          q: q ?? '',
-          engine: defaultEngine,
-        },
-        geo,
-        DEBUG,
-      },
-    }
-  } */
 }
-const DEBUG = false;
+const DEBUG = true;
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
+const processUrl = (url, key) => url.replace(/%s/g, encodeURIComponent(key));
+
 export default function Test(props) {
+	const { frames, links } = props;
 	const { data: geoData, error: geoError } = useSWR('/api/geoip/country', fetcher);
 
 	const { resolvedTheme } = useTheme();
 
 	// * Search Functionality
 	const router = useRouter();
-	const engine = useRef(
-		props.default.engine === 'default' ? frames('', false)[0].title : props.default.engine
-	);
+	const engine = useRef(props.default.engine === 'default' ? frames[0].name : props.default.engine);
 	const searchKey = useRef(props.default.q);
 
 	const [inputKey, setInputKey] = useState(props.default.q);
@@ -107,7 +91,7 @@ export default function Test(props) {
 	}, []);
 
 	// Change default engine based on geo-ip data
-	useEffect(() => {
+	/* 	useEffect(() => {
 		const clientInCN = geoData?.country === 'CN' ? false : true;
 		const defaultEngine = clientInCN
 			? frames('', clientInCN)[0].title
@@ -117,7 +101,7 @@ export default function Test(props) {
 				console.log('GEO API responded: change engine from', engine.current, 'to', defaultEngine);
 			handleSetEngine(defaultEngine);
 		}
-	}, [geoData]);
+	}, [geoData]); */
 
 	const handleSetSearch = (newSearchKey) => {
 		const trimmedKey = newSearchKey.trim();
@@ -209,25 +193,25 @@ export default function Test(props) {
 
 	const menu = isMobile ? (
 		<Menu>
-			{links(encodeURIComponent(searchKey.current)).map(({ link, title }) => (
-				<Menu.Item key={title}>
+			{links.map(({ url, name }) => (
+				<Menu.Item key={name}>
 					<a
-						title={title}
-						key={title}
-						href={link}
+						title={name}
+						key={name}
+						href={processUrl(url, searchKey.current)}
 						target='_blank'
 						rel='noreferrer'
 						className='links'
 					>
-						{title}
+						{name}
 					</a>
 				</Menu.Item>
 			))}
 		</Menu>
 	) : null;
 
-	const enginesList = frames('').map(({ title }) => title);
-	const linksList = links('').map(({ title }) => title);
+	const enginesList = frames.map(({ name }) => name);
+	const linksList = links.map(({ name }) => name);
 	const currLinkIdx = useRef(0);
 
 	// Keyboard shortcuts
@@ -329,7 +313,7 @@ export default function Test(props) {
 			document.removeEventListener('keyup', onKeyUp);
 		};
 	}, []);
-
+	const [modalVisible, setModalVisible] = useState(false)
 	return (
 		<div className='app-container flex flex-col h-screen w-screen'>
 			{/* Custom HTML head */}
@@ -426,17 +410,17 @@ export default function Test(props) {
 					{/* Desktop Links */}
 					<div className='hidden md:block'>
 						<div className='flex flex-nowrap space-x-1 xl:space-x-2 h-full justify-evenly'>
-							{links(encodeURIComponent(searchKey.current)).map(({ link, title }) => (
+							{links.map(({ url, name }) => (
 								<a
-									title={title}
-									key={title}
-									id={title + '-link'}
-									href={link}
+									title={name}
+									key={name}
+									id={name + '-link'}
+									href={processUrl(url, searchKey.current)}
 									target='_blank'
 									rel='noreferrer'
 									className='rounded-sm responsive-element h-8 p-1 lg:p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center'
 								>
-									{title} <LinkOutlined className='ml-1' />
+									{name} <LinkOutlined className='ml-1' />
 								</a>
 							))}
 						</div>
@@ -452,40 +436,45 @@ export default function Test(props) {
 					className='dark:text-white dark:bg-gray-900'
 					activeKey={engine.current}
 					onTabClick={handleSetEngine}
+					tabBarExtraContent={
+						<button
+							className='rounded-sm responsive-element h-8 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none '
+							onClick={(e) => setModalVisible(true)}
+						>
+							Config <SettingFilled className='ml-1' />
+						</button>
+					}
 				>
-					{frames(encodeURIComponent(searchKey.current))
-						// .sort((a, b) => (b?.priority ?? 0) - (a?.priority ?? 0))
-						.map(({ title, link }) => (
-							<Tabs.TabPane key={title} tab={title} className='tabpane'>
-								{DEBUG ? (
-									<ul className='ml-24 h-full flex flex-col justify-center leading-loose list-disc dark:text-white'>
-										<li>Search Key: {searchKey.current}</li>
-										<li>Engine: {engine.current}</li>
-										{/* <li>Country: {geoData?.country}</li> <li>IP: {geoData?.ip}</li> */}
-										<li>Theme: {resolvedTheme}</li>
-										<li>Query: {searchKey.current}</li>
-									</ul>
-								) : (
-									<iframe
-										title={title}
-										className='frame'
-										src={parseLink(link)}
-										key={title + refresher}
-										width='100%'
-										height='100%'
-										frameBorder='0'
-										loading='lazy'
-										sandbox='allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation'
-										referrerPolicy='no-referrer'
-										style={
-											resolvedTheme === 'dark' ? { filter: 'invert(1) hue-rotate(180deg)' } : {}
-										}
-									/>
-								)}
-							</Tabs.TabPane>
-						))}
+					{frames.map(({ name, url }) => (
+						<Tabs.TabPane key={name} tab={name} className='tabpane'>
+							{DEBUG ? (
+								<ul className='ml-24 h-full flex flex-col justify-center leading-loose list-disc dark:text-white'>
+									<li>Search Key: {searchKey.current}</li>
+									<li>Engine: {engine.current}</li>
+									{/* <li>Country: {geoData?.country}</li> <li>IP: {geoData?.ip}</li> */}
+									<li>Theme: {resolvedTheme}</li>
+									<li>Query: {searchKey.current}</li>
+								</ul>
+							) : (
+								<iframe
+									title={name}
+									className='frame'
+									src={processUrl(url, searchKey.current)}
+									key={name + refresher}
+									width='100%'
+									height='100%'
+									frameBorder='0'
+									loading='lazy'
+									sandbox='allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation'
+									referrerPolicy='no-referrer'
+									style={resolvedTheme === 'dark' ? { filter: 'invert(1) hue-rotate(180deg)' } : {}}
+								/>
+							)}
+						</Tabs.TabPane>
+					))}
 				</Tabs>
 			</div>
+			<SearchConfigModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
 		</div>
 	);
 }
