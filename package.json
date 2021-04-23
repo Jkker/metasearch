@@ -13,6 +13,7 @@
     "geoip-country": "^4.0.64",
     "ismobilejs": "^1.1.1",
     "lodash": "^4.17.21",
+    "mongoose": "^5.12.5",
     "next": "10.1.3",
     "next-pwa": "^5.2.14",
     "next-seo": "^4.24.0",

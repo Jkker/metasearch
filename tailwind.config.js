@@ -7,7 +7,7 @@ module.exports = {
 			safelist: ['type'], // [type='checkbox']
 		},
 	},
-	important: true,
+	// important: true,
 	darkMode: 'class',
 	theme: {
 		extend: {

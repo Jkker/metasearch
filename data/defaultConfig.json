@@ -1,0 +1,99 @@
+[
+	{
+		"url": "https://www.google.com/search?igu=1&q=%s&oq=%s",
+		"name": "Google",
+		"slug": "google",
+		"priority": 0,
+		"blockedRegions": ["CN", "CU", "IR", "KP", "SY", "VN", "MM"],
+		"locale": "en",
+		"embeddable": true
+	},
+	{
+		"name": "百度",
+		"url": "https://www.baidu.com/s?ie=utf-8&word=%s",
+		"slug": "baidu",
+		"embeddable": true
+	},
+	{
+		"name": "Bing",
+		"url": "https://www.bing.com/search?q=%s",
+		"slug": "bing",
+		"embeddable": true
+	},
+	{
+		"name": "有道",
+		"url": "https://www.youdao.com/w/%s",
+		"urlMobile": "http://m.youdao.com/dict?q=%s",
+		"embeddable": true
+	},
+	{
+		"name": "微博",
+		"url": "https://s.weibo.com/weibo/%s?topnav=1&wvr=6",
+		"slug": "sinaweibo",
+		"embeddable": true
+	},
+	{
+		"name": "微信",
+		"url": "https://weixin.sogou.com/weixin?p=01030402&query=%s&type=2&ie=utf8",
+		"slug": "wechat",
+		"embeddable": true
+	},
+	{
+		"name": "bilibili",
+		"url": "https://search.bilibili.com/all?keyword=%s",
+		"slug": "bilibili",
+		"embeddable": true
+	},
+	{
+		"name": "淘宝",
+		"url": "https://s.taobao.com/search?q=%s",
+		"slug": "taobao",
+		"embeddable": true
+	},
+	{
+		"name": "京东",
+		"url": "https://search.jd.com/Search?keyword=%s&enc=utf-8&spm=2.1",
+		"slug": "JD",
+		"embeddable": true
+	},
+	{
+		"name": "百度指数",
+		"url": "https://index.baidu.com/v2/main/index.html#/trend/%s?words=%s",
+		"slug": "baidu",
+		"embeddable": true
+	},
+	{
+		"name": "知乎",
+		"url": "https://www.zhihu.com/search?type=content&q=%s",
+		"slug": "zhihu",
+		"embeddable": false
+	},
+	{
+		"name": "Github",
+		"url": "https://github.com/search?q=%s",
+		"slug": "github",
+		"embeddable": false
+	},
+	{
+		"name": "YouTube",
+		"url": "https://www.youtube.com/results?search_query=%s",
+		"slug": "youtube",
+		"embeddable": false
+	},
+	{
+		"name": "MAGI",
+		"url": "https://magi.com/search?q=%s",
+		"embeddable": false
+	},
+	{
+		"name": "MDN",
+		"url": "https://developer.mozilla.org/en-US/search?q=%s",
+		"slug": "mdnwebdocs",
+		"embeddable": false
+	},
+	{
+		"name": "KAT",
+		"url": "https://kat.rip/usearch/%s/",
+		"embeddable": false
+	}
+]

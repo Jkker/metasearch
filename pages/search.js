@@ -1,4 +1,4 @@
-import { frames, links } from '@/data/config.js';
+import { frames, links } from '@/data/config-v1.js';
 import { LinkOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Tabs } from 'antd';
 import mobile from 'ismobilejs';
