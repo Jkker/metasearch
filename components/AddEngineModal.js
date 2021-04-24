@@ -1,15 +1,14 @@
 import { Form, Input, InputNumber, message, Modal, Select, Switch } from 'antd';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 const { Option } = Select;
-
 const urlRegex = new RegExp(
 	/https?:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)%s[-a-zA-Z0-9@:%._\+~#=]*/
 );
 
-
 export default function modal(props) {
 	const [form] = Form.useForm();
-
+	const router = useRouter();
 	const { modalVisible, setModalVisible } = props;
 
 	const handleOk = async () => {
@@ -31,6 +30,7 @@ export default function modal(props) {
 			form.resetFields();
 			setModalVisible(false);
 			message.success(`Successfully added: ${res.data.delta.name}`);
+			router.reload();
 		} catch (err) {
 			message.error(err?.response?.data?.message);
 			return;

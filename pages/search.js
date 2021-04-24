@@ -213,6 +213,7 @@ export default function Test(props) {
 	const enginesList = frames.map(({ name }) => name);
 	const linksList = links.map(({ name }) => name);
 	const currLinkIdx = useRef(0);
+	const [modalVisible, setModalVisible] = useState(false);
 
 	// Keyboard shortcuts
 	useEffect(() => {
@@ -222,16 +223,15 @@ export default function Test(props) {
 			switch (key) {
 				// Search / refresh on enter
 				case 'Enter': {
-					handleSetSearch(inputKey);
+					if (!modalVisible) handleSetSearch(inputKey);
 					break;
 				}
 				// Focus search bar on /
 				case '/': {
-					if (document.activeElement !== landingSearchBarRef.current) {
+					if (document.activeElement !== landingSearchBarRef.current && !modalVisible) {
 						e.preventDefault();
 						landingSearchBarRef?.current?.focus?.();
 					}
-
 					break;
 				}
 				// Unfocus search bar on escape
@@ -241,7 +241,7 @@ export default function Test(props) {
 					break;
 				}
 				case 'ArrowRight': {
-					if (document.activeElement !== landingSearchBarRef.current) {
+					if (document.activeElement !== landingSearchBarRef.current && !modalVisible) {
 						if (e.ctrlKey && e.shiftKey) {
 							break;
 						} else if (e.ctrlKey) {
@@ -262,7 +262,7 @@ export default function Test(props) {
 					break;
 				}
 				case 'ArrowLeft': {
-					if (document.activeElement !== landingSearchBarRef.current) {
+					if (document.activeElement !== landingSearchBarRef.current && !modalVisible) {
 						if (e.ctrlKey && e.altKey) {
 							break;
 						} else if (e.ctrlKey) {
@@ -284,7 +284,7 @@ export default function Test(props) {
 				}
 				// Auto focus on the 1st link
 				case 'Shift': {
-					if (document.activeElement !== landingSearchBarRef.current) {
+					if (document.activeElement !== landingSearchBarRef.current && !modalVisible) {
 						e.preventDefault();
 						// currLinkIdx.current = 0;
 						document.getElementById(linksList[currLinkIdx.current] + '-link')?.focus();
@@ -297,10 +297,15 @@ export default function Test(props) {
 		// Open the currently focused link when shift key is released
 		function onKeyUp(e) {
 			// console.log('Released: ', e.key);
-			if (e.key === 'Shift' && document.activeElement !== landingSearchBarRef.current) {
+			if (
+				e.key === 'Shift' &&
+				document.activeElement !== landingSearchBarRef.current &&
+				!modalVisible
+			) {
+				console.log('modalVisible:', modalVisible);
 				e.preventDefault();
 				const currLink = document.getElementById(linksList[currLinkIdx.current] + '-link');
-				currLink.click();
+				// currLink.click();
 				currLink.blur();
 				// currLinkIdx.current = false;
 			}
@@ -313,7 +318,6 @@ export default function Test(props) {
 			document.removeEventListener('keyup', onKeyUp);
 		};
 	}, []);
-	const [modalVisible, setModalVisible] = useState(false)
 	return (
 		<div className='app-container flex flex-col h-screen w-screen'>
 			{/* Custom HTML head */}
