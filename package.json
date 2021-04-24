@@ -10,6 +10,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "antd": "^4.15.2",
+    "axios": "^0.21.1",
     "geoip-country": "^4.0.64",
     "ismobilejs": "^1.1.1",
     "lodash": "^4.17.21",

@@ -81,7 +81,7 @@ export default function Home(props) {
 							type='text'
 							ref={searchBarRef}
 							onChange={(e) => setSearchKey(e.target.value)}
-							className='w-full  text-gray-100 sm:shadow focus:shadow-md sm:focus:shadow-xl bg-gray-100 dark:bg-gray-800 acrylic bg-opacity-40 dark:bg-opacity-50 rounded placeholder-gray-200 dark:placeholder-gray-400 h-10 p-3 text-base mb-4 sm:mb-1'
+							className='w-full text-gray-100 sm:shadow focus:shadow-md sm:focus:shadow-xl bg-gray-100 dark:bg-gray-800 acrylic bg-opacity-40 dark:bg-opacity-50 rounded placeholder-gray-200 dark:placeholder-gray-400 h-10 p-3 text-base mb-4 sm:mb-1 bg-transparent outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0'
 							value={searchKey}
 							onKeyDown={(e) => {
 								if (e.key === 'Enter') {

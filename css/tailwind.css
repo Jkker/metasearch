@@ -18,7 +18,7 @@ html {
     /* font-family: 'Noto Sans SC', 'Lexand', sans-serif; */
     @apply mb-1 flex items-center;
   }
-  [type='text'],
+/*   [type='text'],
   [type='email'],
   [type='url'],
   [type='password'],
@@ -34,7 +34,7 @@ html {
   textarea,
   select {
     @apply bg-transparent shadow-none focus:shadow-none outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0;
-  }
+  } */
   img {
     @apply opacity-100 duration-500 ease-in-out dark:opacity-70 dark:hover:opacity-100;
   }

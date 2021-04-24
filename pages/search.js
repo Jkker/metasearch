@@ -1,6 +1,6 @@
 // import { frames, links } from '@/data/config-v1.js';
 import { LinkOutlined, SettingFilled } from '@ant-design/icons';
-import { Dropdown, Menu, Tabs } from 'antd';
+import { Dropdown, Menu, Tabs, Button } from 'antd';
 import mobile from 'ismobilejs';
 import dbConnect from 'lib/dbConnect.js';
 import dbInit from 'lib/dbInit.js';
@@ -16,7 +16,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 import ThemeSwitch from '../components/ThemeSwitch';
 const querystring = require('querystring');
-import SearchConfigModal from 'components/SearchConfigModal';
+import AddEngineModal from '@/components/AddEngineModal';
 
 export async function getServerSideProps(context) {
 	const { q, engine } = context.query;
@@ -44,7 +44,7 @@ export async function getServerSideProps(context) {
 		},
 	};
 }
-const DEBUG = true;
+const DEBUG = false;
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -345,7 +345,7 @@ export default function Test(props) {
 							type='text'
 							ref={landingSearchBarRef}
 							onChange={handleInputChange}
-							className='flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100 p-3 pr-8 text-base'
+							className='flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100 p-3 pr-8 text-base outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0'
 							value={inputKey}
 						/>
 						{/* Search Bar Actions */}
@@ -437,12 +437,14 @@ export default function Test(props) {
 					activeKey={engine.current}
 					onTabClick={handleSetEngine}
 					tabBarExtraContent={
-						<button
-							className='rounded-sm responsive-element h-8 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none '
+						<Button
+							type='primary'
+							icon={<SettingFilled />}
 							onClick={(e) => setModalVisible(true)}
+							className='rounded-sm flex flex-nowrap whitespace-nowrap justify-evenly items-center'
 						>
-							Config <SettingFilled className='ml-1' />
-						</button>
+							Config
+						</Button>
 					}
 				>
 					{frames.map(({ name, url }) => (
@@ -474,7 +476,7 @@ export default function Test(props) {
 					))}
 				</Tabs>
 			</div>
-			<SearchConfigModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+			<AddEngineModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
 		</div>
 	);
 }
