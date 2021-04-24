@@ -305,7 +305,7 @@ export default function Test(props) {
 				console.log('modalVisible:', modalVisible);
 				e.preventDefault();
 				const currLink = document.getElementById(linksList[currLinkIdx.current] + '-link');
-				// currLink.click();
+				currLink.click();
 				currLink.blur();
 				// currLinkIdx.current = false;
 			}
@@ -317,7 +317,7 @@ export default function Test(props) {
 			document.removeEventListener('keydown', onKeyDown);
 			document.removeEventListener('keyup', onKeyUp);
 		};
-	}, []);
+	}, [modalVisible]);
 	return (
 		<div className='app-container flex flex-col h-screen w-screen'>
 			{/* Custom HTML head */}
