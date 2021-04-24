@@ -1,7 +1,4 @@
 {
 	"name": "metasearch",
-	"version": 2,
-	"env": {
-		"MONGODB_URI": "@metasearch-mongodb-uri"
-	}
+	"version": 2
 }
