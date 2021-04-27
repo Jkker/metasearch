@@ -11,6 +11,7 @@ module.exports = withBundleAnalyzer(
 		},
 		pwa: {
 			dest: 'public',
+			disable: process.env.NODE_ENV === 'development',
 			register: true,
 			scope: '/',
 		},
@@ -33,7 +34,7 @@ module.exports = withBundleAnalyzer(
 				use: ['@svgr/webpack'],
 			});
 
-		/* 	if (!dev && !isServer) {
+			/* 	if (!dev && !isServer) {
 				// Replace React with Preact only in client production build
 				Object.assign(config.resolve.alias, {
 					react: 'preact/compat',
