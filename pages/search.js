@@ -21,8 +21,8 @@ export async function getStaticProps(context) {
   return {
     props: {
       config,
-      DEBUG: true,
-      username
+      DEBUG: process.env.NODE_ENV === 'development',
+      username,
     },
   }
 }
