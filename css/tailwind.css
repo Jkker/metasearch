@@ -18,7 +18,7 @@ html {
     /* font-family: 'Noto Sans SC', 'Lexand', sans-serif; */
     @apply mb-1 flex items-center;
   }
-/*   [type='text'],
+  /*   [type='text'],
   [type='email'],
   [type='url'],
   [type='password'],
@@ -37,6 +37,9 @@ html {
   } */
   img {
     @apply opacity-100 duration-500 ease-in-out dark:opacity-70 dark:hover:opacity-100;
+  }
+  button {
+    @apply flex justify-center items-center;
   }
 }
 
@@ -117,6 +120,23 @@ html {
     bottom: 0;
     margin-right: -9px;
     @apply bg-blue-500;
+  }
+  .ant-tabs-tab {
+    @apply flex justify-between items-center p-0 m-0;
+  }
+  label,
+  .ant-form-item-label > label .ant-form-item-tooltip {
+    @apply dark:text-white;
+  }
+  .ant-tabs-left > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane,
+  .ant-tabs-left > div > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
+    @apply p-0;
+  }
+  .ant-row.ant-form-item {
+    @apply sm:flex-nowrap;
+  }
+  .ant-tabs-tab {
+    @apply m-0;
   }
 }
 

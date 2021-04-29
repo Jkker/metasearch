@@ -1,6 +1,7 @@
 import dbConnect from 'lib/dbConnect.js'
+import dbInit from 'lib/dbInit.js'
 import { ClientError, ServerError } from 'lib/errorHandlers.js'
-import Engine from 'models/Engine.js'
+import Frame from 'models/Frame.js'
 import User from 'models/User.js'
 
 export default async function handler(req, res) {
@@ -18,12 +19,13 @@ export default async function handler(req, res) {
   console.log('username:', username, '; engineId:', _id)
 
   await dbConnect()
+  await dbInit()
 
   try {
     const user = await User.findOne({
       username,
     })
-      .populate('config')
+      .populate('frames')
       .exec()
       .catch(dbError)
     if (!user) {
@@ -31,33 +33,33 @@ export default async function handler(req, res) {
     } else {
       switch (method) {
         case 'GET': {
-          const config = !_id ? user['config'] : user['config'].filter((e) => e.title === _id)
-          if (!config || config.length === 0) {
+          const frames = !_id ? user['frames'] : user['frames'].filter((e) => e.title === _id)
+          if (!frames || frames.length === 0) {
             throw new ClientError('Engine not found', 404)
           } else {
-            await res.status(200).json({ success: true, config })
+            await res.status(200).json({ success: true, frames })
           }
           break
         }
 
         case 'POST': {
-          const newEngines = await Engine.create(body).catch(ClientError)
-          user['config'].push(...(Array.isArray(newEngines) ? newEngines : [newEngines]))
+          const newFrames = await Frame.create(JSON.parse(body)).catch(ClientError)
+          user['frames'].push(...(Array.isArray(newFrames) ? newFrames : [newFrames]))
           const updatedUser = await user.save().catch(dbError)
-          await res.json({ success: true, delta: newEngines })
+          await res.json({ success: true, delta: newFrames })
           break
         }
 
         case 'DELETE': {
-          await user['config'].remove({ _id })
-          const delta = await Engine.findByIdAndRemove(_id)
+          await user['frames'].remove({ _id })
+          const delta = await Frame.findByIdAndRemove(_id)
           if (!delta) throw new ClientError('Engine not found', 404)
           await res.json({ success: true, delta })
           break
         }
 
         case 'PATCH': {
-          const delta = await Engine.findByIdAndUpdate(_id, body, { new: true })
+          const delta = await Frame.findByIdAndUpdate(_id, body)
           if (!delta) throw new ClientError('Engine not found', 404)
           await res.json({ success: true, delta })
           break

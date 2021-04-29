@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const EngineSchema = new mongoose.Schema(
+const LinkSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true, index: true },
     url: { type: String, required: true, trim: true }, //search key replaced with '%s'
@@ -22,4 +22,4 @@ const EngineSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-export default mongoose.models.Engine || mongoose.model('Engine', EngineSchema)
+export default mongoose.models.Link || mongoose.model('Link', LinkSchema)

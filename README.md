@@ -121,28 +121,41 @@ Stores pre-supplied or user-defined search engine entries.
 
 ```js
 {
-	url: { type: String, unique: true, required: true, trim: true }, //search key replaced with '%s'
-	urlMobile: { type: String, unique: true, required: false, trim: true }, //search key replaced with '%s'
-	name: { type: String, unique: true, required: true, trim: true },
-	priority: { type: Number, default: 0 }, // larger number = greater priority
-	blockedRegions: [String], // 2 letter ISO-3166-1 country codes
-	locale: String,
-	embeddable: Boolean, // true = embedded iframe; false = external link
-	slug: String, // slug for retrieving icons
-}
+    title: { type: String, required: true, trim: true, index: true },
+    url: { type: String, required: true, trim: true }, //search key replaced with '%s'
+    platform: {
+      desktop: { type: Boolean, default: true },
+      mobile: { type: Boolean, default: true },
+    },
+    priority: { type: Number, default: 0 }, // larger number = greater priority
+    blockedRegions: { type: [String], default: [] }, // 2 letter ISO-3166-1 country codes (e.g. "US")
+    locale: String, // BCP-47 language tag (e.g. "en-US")
+    embeddable: { type: Boolean, default: false }, // true = embedded iframe; false = external link
+    slug: { type: String },
+    style: {
+      // obtained from simple-icon using slugs
+      hex: { type: String, default: '#FFFFFF' },
+      svg: { type: String },
+    },
+  },
 ```
 
 #### Example
 
 ```json
 {
+  "title": "Google",
   "url": "https://www.google.com/search?igu=1&q=%s&oq=%s",
-  "name": "Google",
   "priority": 0,
   "blockedRegions": ["CN", "CU", "IR", "KP", "SY", "VN", "MM"],
-  "locale": "en",
+  "locale": null,
+  "style": {
+    "hex": "#4285F4",
+    "svg": "<svg role=\"img\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><title>Google icon</title><path d=\"M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z\"/></svg>"
+  },
+  "slug": "google",
   "embeddable": true
-},
+  },
 ```
 
 ### Users
@@ -151,11 +164,24 @@ Stores information about registered users.
 
 ```js
 {
-  username: String,
-  password: String,
-  email?: String,
-  telephone?: Number,
- 	config?:
+	username: {
+		type: String,
+		required: [true, "can't be blank"],
+		match: [UsernameRegexp, 'is invalid'],
+		index: true,
+	},
+	email: {
+		type: String,
+		lowercase: true,
+		required: [true, "can't be blank"],
+		match: [EmailRegexp, 'is invalid'],
+		index: true,
+	},
+	image: String,
+	hash: String,
+	salt: String,
+	frames: [{ type: Schema.Types.ObjectId, ref: 'Frame' }],
+	links: [{ type: Schema.Types.ObjectId, ref: 'Link' }],
 }
 ```
 
@@ -190,6 +216,30 @@ Stores information about registered users.
 `PATCH /api/configs/:username/:engine` (✍ write)
 
 `DELETE /api/configs/:username/:engine` (✍ write)
+
+### `frames` endpoint
+
+`GET /api/frames/:owner` (📖 read)
+
+`GET /api/frames/:owner/:engine` (📖 read)
+
+`POST /api/frames/:owner/:engine` (✍ write)
+
+`PATCH /api/frames/:owner/:engine` (✍ write)
+
+`DELETE /api/frames/:owner/:engine` (✍ write)
+
+### `links` endpoint
+
+`GET /api/links/:owner` (📖 read)
+
+`GET /api/links/:owner/:engine` (📖 read)
+
+`POST /api/links/:owner/:engine` (✍ write)
+
+`PATCH /api/links/:owner/:engine` (✍ write)
+
+`DELETE /api/links/:owner/:engine` (✍ write)
 
 ### `users` endpoint
 
