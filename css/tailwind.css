@@ -72,6 +72,9 @@ html {
   .link {
     @apply text-blue-500 hover:text-blue-600 dark:hover:text-blue-400;
   }
+  .h-8-1 {
+    height: 1.9rem;
+  }
 }
 
 @layer components {
@@ -122,7 +125,15 @@ html {
     @apply bg-blue-500;
   }
   .ant-tabs-tab {
-    @apply flex justify-between items-center p-0 m-0;
+    @apply flex justify-between items-center p-0 m-0 dark:bg-gray-800 dark:text-white;
+  }
+  .ant-tabs-nav-add,
+  .ant-tabs-nav-operations,
+  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active,
+  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active,
+  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
+  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
+    @apply dark:bg-gray-800 dark:text-white;
   }
   label,
   .ant-form-item-label > label .ant-form-item-tooltip {
@@ -135,9 +146,21 @@ html {
   .ant-row.ant-form-item {
     @apply sm:flex-nowrap;
   }
-  .ant-tabs-tab {
+  div.ant-tabs-nav {
+    @apply my-1 h-8;
+  }
+  .ant-switch-inner {
+    @apply grid;
+  }
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
     @apply m-0;
   }
+  /* div.search-body-container .ant-tabs-tab.ant-tabs-tab-active{
+
+  } */
 }
 
 #weather > div {
