@@ -28,7 +28,7 @@ export async function getStaticProps(context) {
       username,
     },
     revalidate: 1,
-    fallback: 'blocking',
+    // fallback: 'blocking',
   }
 }
 
