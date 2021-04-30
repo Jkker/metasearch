@@ -27,6 +27,8 @@ export async function getStaticProps(context) {
       DEBUG: process.env.NODE_ENV === 'development',
       username,
     },
+    revalidate: 1,
+    fallback: 'blocking',
   }
 }
 
@@ -43,6 +45,7 @@ function ClientOnly({ children, hasMounted }) {
 }
 
 export default function Search(props) {
+  const router = useRouter()
   const DEBUG = props.DEBUG
   const isMobile = mobile().any
   const platform = isMobile ? 'mobile' : 'desktop'
@@ -58,7 +61,6 @@ export default function Search(props) {
   const { resolvedTheme } = useTheme()
 
   // * Search Functionality
-  const router = useRouter()
   const defaultEngine = frames[0].title
 
   const engine = useRef(router.query?.engine ?? defaultEngine)
