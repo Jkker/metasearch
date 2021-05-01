@@ -1,42 +1,37 @@
 // import AddEngineModal from "@/components/AddEngineModal"
 // import dbConnect from "lib/dbConnect.js"
 // import User from "models/User.js"
-import React from "react"
-import Form from "components/ConfigItemForm"
-import ClientOnly from "components/ClientOnly"
+// import Form from "components/ConfigItemForm"
+// import ClientOnly from "components/ClientOnly"
+// import { Spin  } from 'antd'
+import Loading from 'components/Loading.js'
+import { signIn, signOut, useSession } from 'next-auth/client'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 
-/* export async function getStaticProps(context) {
-  await dbConnect()
+const fetcher = (url) => fetch(url).then((r) => r.json())
 
-  const user = await User.findOne({
-    username: context.locale,
-  })
-    .populate("config")
-    .exec()
-    .catch(console.log)
-  const config = await JSON.parse(JSON.stringify(user.config))
-  return {
-    props: {
-      config,
-    },
-  }
-} */
-export default function Test(props) {
-  /* const [modalVisible, setModalVisible] = useState(true)
+export default function Page() {
+  const [session, loading] = useSession()
+  const router = useRouter()
+  useEffect(() => {
+    if (router.isReady) console.log(router.query.e, typeof router.query.e)
+  }, [router.isReady])
   return (
-    <div>
-      <button
-        className="rounded-sm responsive-element h-8 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none "
-        onClick={(e) => setModalVisible(true)}
-      >
-        Config
-      </button>
-       <AddEngineModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
-    </div>
-  ) */
-  return (
-    <ClientOnly>
-      <Form />
-    </ClientOnly>
+    <Loading spinning={loading}>
+      {!session && (
+        <>
+          Not signed in <br />
+          <button onClick={() => signIn()}>Sign in</button>
+        </>
+      )}
+      {session && (
+        <>
+          Signed in as {session.user.name} <br />
+          <div>{JSON.stringify(session, null, 2)}</div>
+          <button onClick={() => signOut()}>Sign out</button>
+        </>
+      )}
+    </Loading>
   )
 }

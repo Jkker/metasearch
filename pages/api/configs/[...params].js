@@ -2,33 +2,41 @@ import dbConnect from 'lib/dbConnect.js'
 import { ClientError, ServerError } from 'lib/errorHandlers.js'
 import Engine from 'models/Engine.js'
 import User from 'models/User.js'
+import { getSession } from 'next-auth/client'
+
+function dbError(error, message = 'Database Error', status = 500) {
+  throw new ServerError(message, status, error)
+}
 
 export default async function handler(req, res) {
-  function dbError(error, message = 'Database Error', status = 500) {
-    throw new ServerError(message, status, error)
-  }
+  const session = await getSession({ req })
+
+  const userQuery = {}
 
   const {
     method,
     query: { params },
     body,
   } = req
-  const [username, _id] = params
+  const [name, _id] = params
 
-  console.log('username:', username, '; engineId:', _id)
+  if (session) {
+    userQuery['_id'] = session.user._id
+    console.log('Session! name', name, '; engineId:', _id)
+  } else {
+    userQuery['name'] = name
+    console.log('NO Session! name:', name, '; engineId:', _id)
+  }
 
   await dbConnect()
 
   try {
-    const user = await User.findOne({
-      username,
-    })
-      .populate('config')
-      .exec()
-      .catch(dbError)
+    const user = await User.findOne(userQuery).populate('config').exec().catch(dbError)
     if (!user) {
+      console.log('User not found with query', userQuery)
       throw new ClientError('User not found', 404)
     } else {
+      console.log('Found User', user.name)
       switch (method) {
         case 'GET': {
           const config = !_id ? user['config'] : user['config'].filter((e) => e.title === _id)

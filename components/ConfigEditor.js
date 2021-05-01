@@ -12,10 +12,20 @@ const { TabPane } = Tabs
 const BASE_URL = '/api/configs/'
 
 export default function Editor(props) {
+  /*   if (!props.session) {
+    signIn()
+    return null
+  } */
+  const { session, DEBUG } = props
+
+  const { loading, setLoading } = props
+  /*   useEffect(() => {
+    setLoading(props.loading)
+  }, [props.loading]) */
   const { config, setConfig } = props
   const [activeKey, setActiveKey] = useState(config[0]._id)
   const newTabIndex = useRef(0)
-  const getURL = (id = '') => path.join(BASE_URL, props.username, id)
+  const getURL = (id = '') => path.join(BASE_URL, props.name, id)
 
   const onTabEdit = (targetKey, action) => {
     console.log(targetKey)
@@ -39,6 +49,7 @@ export default function Editor(props) {
     }
   }
   async function handleDelete(engine) {
+    setLoading(true)
     if (!engine._id) {
       // deleting unsaved item
       setConfig(config.filter((e) => e.title !== engine.title))
@@ -56,8 +67,11 @@ export default function Editor(props) {
         message.error('Error: ' + err)
       }
     }
+    setLoading(false)
   }
   async function handleChange(engine) {
+    setLoading(true)
+
     if (!engine._id) {
       // post
       console.log('Create', engine.title)
@@ -87,6 +101,7 @@ export default function Editor(props) {
         setConfig(config.map((e) => (e._id === res.data.delta._id ? res.data.delta : e)))
       }
     }
+    setLoading(false)
   }
 
   return (
@@ -100,7 +115,7 @@ export default function Editor(props) {
     >
       {config.map((e) => (
         <TabPane
-          className="w-full h-full flex-center"
+          className="w-full h-full flex-col flex-center flex-nowrap max-w-screen"
           tab={
             <div className="tab-title flex-center">
               <SVGFromString svg={e.style?.svg} />
@@ -123,9 +138,20 @@ export default function Editor(props) {
             </Popconfirm>
           }
         >
-          <ClientOnly className="w-full h-full flex-center">
+          <ClientOnly className="w-full h-full flex-center mt-4">
             <ConfigItemForm config={e} onFinish={handleChange} />
           </ClientOnly>
+          {DEBUG ? (
+            <ul className="ml-24 h-full flex flex-col justify-center leading-loose list-disc dark:text-white break-all m-2">
+              <h2>
+                <b>User</b>
+              </h2>
+              <li>Username: {session?.user?.name}</li>
+              <li>Email: {session?.user?.email}</li>
+              <li>Icon: {session?.user?.image}</li>
+              <li>AccessToken: {session?.accessToken}</li>
+            </ul>
+          ) : null}
         </TabPane>
       ))}
     </Tabs>

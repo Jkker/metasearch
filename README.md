@@ -164,7 +164,7 @@ Stores information about registered users.
 
 ```js
 {
-	username: {
+	name: {
 		type: String,
 		required: [true, "can't be blank"],
 		match: [UsernameRegexp, 'is invalid'],
@@ -189,7 +189,7 @@ Stores information about registered users.
 
 ```js
 {
-  username: 'Jkker',
+  name: 'Jkker',
   password: ********,
   email?: 'me@jerrykjia.com',
   telephone?: *********,

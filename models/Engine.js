@@ -18,6 +18,7 @@ const EngineSchema = new mongoose.Schema(
       hex: { type: String, default: '#FFFFFF' },
       svg: { type: String },
     },
+    // user: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { timestamps: true }
 )

@@ -158,9 +158,12 @@ html {
   .ant-tabs-card.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
     @apply m-0;
   }
-  /* div.search-body-container .ant-tabs-tab.ant-tabs-tab-active{
-
-  } */
+  .ant-spin-nested-loading > div > .ant-spin {
+    @apply flex-center;
+  }
+  .app-container .ant-spin-container{
+    @apply flex flex-col h-screen w-screen
+  }
 }
 
 #weather > div {

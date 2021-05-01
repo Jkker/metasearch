@@ -8,11 +8,11 @@ import path from 'path'
 import React, { useRef, useState } from 'react'
 const { TabPane } = Tabs
 export async function getServerSideProps(context) {
-  const username = context.params.username
-  const initConfig = await getConfig(username)
+  const name = context.params.username
+  const initConfig = await getConfig(name)
   // console.log(initConfig)
 
-  return { props: { initConfig, username } }
+  return { props: { initConfig, name } }
 }
 
 const BASE_URL = '/api/configs/'
@@ -21,7 +21,7 @@ export default function Editor(props) {
   const [config, setConfig] = useState(props.initConfig)
   const [activeKey, setActiveKey] = useState(config[0]._id)
   const newTabIndex = useRef(0)
-  const getURL = (id = '') => path.join(BASE_URL, props.username, id)
+  const getURL = (id = '') => path.join(BASE_URL, props.name, id)
 
   const onTabEdit = (targetKey, action) => {
     console.log(targetKey)

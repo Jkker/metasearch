@@ -5,17 +5,17 @@ const Schema = mongoose.Schema
 
 const UserSchema = new Schema(
   {
-    username: {
+    name: {
       type: String,
       required: [true, "can't be blank"],
-      match: [UsernameRegexp, 'is invalid'],
+      // match: [UsernameRegexp, 'Username invalid'],
       index: true,
     },
     email: {
       type: String,
       lowercase: true,
-      required: [true, "can't be blank"],
-      match: [EmailRegexp, 'is invalid'],
+      // required: [true, "can't be blank"],
+      match: [EmailRegexp, 'Email invalid'],
       index: true,
     },
     image: String,
