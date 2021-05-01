@@ -132,6 +132,8 @@ html {
   .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active,
   .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active,
   .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
+  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab,
+  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
   .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
     @apply dark:bg-gray-800 dark:text-white;
   }

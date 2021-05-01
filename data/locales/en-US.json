@@ -1,7 +1,7 @@
 [
   {
     "title": "Google",
-    "url": "https://www.google.com/search?igu=1&q=%s&oq=%s",
+    "url": "https://www.google.com/search?igu=1&pws=0&gl=us&gws_rd=cr&source=hp&newwindow=1&q=%s&oq=%s",
     "priority": 0,
     "blockedRegions": ["CN", "CU", "IR", "KP", "SY", "VN", "MM"],
     "locale": null,
