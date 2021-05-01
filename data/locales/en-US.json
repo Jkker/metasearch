@@ -13,7 +13,7 @@
     "embeddable": true
   },
   {
-    "title": "百度",
+    "title": "Baidu",
     "url": "https://www.baidu.com/s?ie=utf-8&word=%s",
     "style": {
       "hex": "#2932E1",
@@ -33,7 +33,7 @@
     "embeddable": true
   },
   {
-    "title": "有道",
+    "title": "Youdao",
     "url": "https://www.youdao.com/w/%s",
     "style": { "hex": "#E31436", "svg": null },
     "platform": { "mobile": false },
@@ -41,7 +41,7 @@
     "embeddable": true
   },
   {
-    "title": "有道",
+    "title": "Youdao",
     "url": "http://m.youdao.com/dict?q=%s",
     "style": { "hex": "#E31436", "svg": null },
     "platform": { "desktop": false },
@@ -49,7 +49,7 @@
     "embeddable": true
   },
   {
-    "title": "微博",
+    "title": "Weibo",
     "url": "https://s.weibo.com/weibo/%s?topnav=1&wvr=6",
     "style": {
       "hex": "#E6162D",
@@ -59,7 +59,7 @@
     "embeddable": true
   },
   {
-    "title": "微信",
+    "title": "WeChat",
     "url": "https://weixin.sogou.com/weixin?p=01030402&query=%s&type=2&ie=utf8",
     "style": {
       "hex": "#07C160",
@@ -79,7 +79,7 @@
     "embeddable": true
   },
   {
-    "title": "淘宝",
+    "title": "Taobao",
     "url": "https://s.taobao.com/search?q=%s",
     "style": {
       "hex": "#E94F20",
@@ -89,14 +89,14 @@
     "embeddable": true
   },
   {
-    "title": "京东",
+    "title": "JD",
     "url": "https://search.jd.com/Search?keyword=%s&enc=utf-8&spm=2.1",
     "style": { "hex": "#E1251B", "svg": null },
     "slug": "jing-dong",
     "embeddable": true
   },
   {
-    "title": "百度指数",
+    "title": "Baidu Index",
     "url": "https://index.baidu.com/v2/main/index.html#/trend/%s?words=%s",
     "style": {
       "hex": "#2932E1",
@@ -107,7 +107,7 @@
   },
 
   {
-    "title": "知乎",
+    "title": "Zhihu",
     "url": "https://www.zhihu.com/search?type=content&q=%s",
     "style": {
       "hex": "#0084FF",

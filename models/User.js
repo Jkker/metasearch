@@ -1,28 +1,31 @@
-import Engine from 'models/Engine.js';
-import mongoose from 'mongoose';
+import { EmailRegexp, UsernameRegexp } from 'lib/regexp'
+import mongoose from 'mongoose'
 
-const UserSchema = new mongoose.Schema(
-	{
-		username: {
-			type: String,
-			lowercase: true,
-			required: [true, "can't be blank"],
-			match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
-			index: true,
-		},
-		email: {
-			type: String,
-			lowercase: true,
-			required: [true, "can't be blank"],
-			match: [/\S+@\S+\.\S+/, 'is invalid'],
-			index: true,
-		},
-		image: String,
-		hash: String,
-		salt: String,
-		config: [Engine],
-	},
-	{ timestamps: true }
-);
+const Schema = mongoose.Schema
 
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+const UserSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "can't be blank"],
+      // match: [UsernameRegexp, 'Username invalid'],
+      index: true,
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      // required: [true, "can't be blank"],
+      match: [EmailRegexp, 'Email invalid'],
+      index: true,
+    },
+    image: String,
+    hash: String,
+    salt: String,
+    config: [{ type: Schema.Types.ObjectId, ref: 'Engine' }],
+  },
+  { timestamps: true }
+)
+
+export default mongoose.models.User || mongoose.model('User', UserSchema)
+
+// export const UserTC = createObjectTC(User)

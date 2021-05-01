@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const EngineSchema = new mongoose.Schema(
+const FrameSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true, index: true },
     url: { type: String, required: true, trim: true }, //search key replaced with '%s'
@@ -11,16 +11,15 @@ const EngineSchema = new mongoose.Schema(
     priority: { type: Number, default: 0 }, // larger number = greater priority
     blockedRegions: { type: [String], default: [] }, // 2 letter ISO-3166-1 country codes (e.g. "US")
     locale: String, // BCP-47 language tag (e.g. "en-US")
-    embeddable: { type: Boolean, default: false }, // true = embedded iframe; false = external link
+    embeddable: { type: Boolean, default: true }, // true = embedded iframe; false = external link
     slug: { type: String },
     style: {
       // obtained from simple-icon using slugs
       hex: { type: String, default: '#FFFFFF' },
       svg: { type: String },
     },
-    // user: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { timestamps: true }
 )
 
-export default mongoose.models.Engine || mongoose.model('Engine', EngineSchema)
+export default mongoose.models.Frame || mongoose.model('Frame', FrameSchema)

@@ -18,7 +18,7 @@ html {
     /* font-family: 'Noto Sans SC', 'Lexand', sans-serif; */
     @apply mb-1 flex items-center;
   }
-  [type='text'],
+  /*   [type='text'],
   [type='email'],
   [type='url'],
   [type='password'],
@@ -34,9 +34,12 @@ html {
   textarea,
   select {
     @apply bg-transparent shadow-none focus:shadow-none outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0;
-  }
+  } */
   img {
     @apply opacity-100 duration-500 ease-in-out dark:opacity-70 dark:hover:opacity-100;
+  }
+  button {
+    @apply flex justify-center items-center;
   }
 }
 
@@ -68,6 +71,9 @@ html {
   }
   .link {
     @apply text-blue-500 hover:text-blue-600 dark:hover:text-blue-400;
+  }
+  .h-8-1 {
+    height: 1.9rem;
   }
 }
 
@@ -117,6 +123,46 @@ html {
     bottom: 0;
     margin-right: -9px;
     @apply bg-blue-500;
+  }
+  .ant-tabs-tab {
+    @apply flex justify-between items-center p-0 m-0 dark:bg-gray-800 dark:text-white;
+  }
+  .ant-tabs-nav-add,
+  .ant-tabs-nav-operations,
+  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active,
+  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active,
+  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
+  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
+    @apply dark:bg-gray-800 dark:text-white;
+  }
+  label,
+  .ant-form-item-label > label .ant-form-item-tooltip {
+    @apply dark:text-white;
+  }
+  .ant-tabs-left > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane,
+  .ant-tabs-left > div > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
+    @apply p-0;
+  }
+  .ant-row.ant-form-item {
+    @apply sm:flex-nowrap;
+  }
+  div.ant-tabs-nav {
+    @apply my-1 h-8;
+  }
+  .ant-switch-inner {
+    @apply grid;
+  }
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
+    @apply m-0;
+  }
+  .ant-spin-nested-loading > div > .ant-spin {
+    @apply flex-center;
+  }
+  .app-container .ant-spin-container{
+    @apply flex flex-col h-screen w-screen
   }
 }
 

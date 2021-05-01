@@ -30,6 +30,9 @@
 
 # About The Project
 
+
+# About The Project
+
 This project is an highly customizable aggregate search engine that helps users to lookup the same keyword on across multiple search engines, especially useful when conducting research, looking for resources, or simply browsing a subject of interest.![Index Page](https://pics-1304851365.file.myqcloud.com/img/index.jpeg)
 
 | Default Theme                                                                        | Dark Theme                                                                |
@@ -47,13 +50,13 @@ This project is an highly customizable aggregate search engine that helps users 
 
 - 🔍 **Search Aggregator**: Lookup a keyword at all mainstream search engines simultaneously!
 
-- 🖥 **Embedded Search Results**: Search results from Google, Baidu, etc. are embedded on the current page with magic ✨.
-- 📱 **Mobile-friendly**: Designed with responsiveness in mind! No more clunky pages on mobile devices.
-- 🌓 **Dark Mode**: Built-in dark mode support! Embedded sites that do not support dark modes can be masked by a filter on demand.
-- 🚀 **Blazingly Fast**: 90+ Lighthouse speed index. Comparable to a native app after first visit.
-- ⌨ **Keyboard Shortcuts**: Navigate your search results with keyboard only! Checkout full list [here](#list-of-keyboard-shortcuts).
-- 🧰 **PWA**: Installable as a stand-alone [Progressive WebApp](https://web.dev/what-are-pwas/) on mobile or desktop devices!
-- ⚙ **Highly Customizable**: Search engines and links can be customized in `config.js`.
+* 🖥 **Embedded Search Results**:  Search results from Google, Baidu, etc. are embedded on the current page with magic ✨.
+* 📱 **Mobile-friendly**: Designed with responsiveness in mind! No more clunky pages on mobile devices.
+* 🌓 **Dark Mode**: Built-in dark mode support! Embedded sites that do not support dark modes can be masked by a filter on demand.
+* 🚀 **Blazingly Fast**: 90+ Lighthouse speed index. Comparable to a native app after first visit.
+* ⌨ **Keyboard Shortcuts**: Navigate your search results with keyboard only! Checkout full list [here](#list-of-keyboard-shortcuts).
+* 🧰 **PWA**: Installable as a stand-alone [Progressive WebApp](https://web.dev/what-are-pwas/) on mobile or desktop devices!
+* ⚙ **Highly Customizable**: Search engines and links can be customized in `config.js`.
 
 - 🌎 **Localization**: Automatically set the default search engine based on user’s locale.
 
@@ -95,9 +98,7 @@ You can use **Metasearch** directly at [search.jerrykjia.com](https://search.jer
 
 ## Set as Default Search Engine
 
-- Edge: [Change your default search engine in Microsoft Edge](https://support.microsoft.com/en-us/microsoft-edge/change-your-default-search-engine-in-microsoft-edge-cccaf51c-a4df-a43e-8036-d4d2c527a791)
-- Chrome: [Set your default search engine - Computer - Google Chrome Help](https://support.google.com/chrome/answer/95426?co=GENIE.Platform%3DDesktop&hl=en)
-- Firefox: [Change your default search settings in Firefox | Firefox Help (mozilla.org)](https://support.mozilla.org/en-US/kb/change-your-default-search-settings-firefox)
+# Development
 
 # Development
 
@@ -118,28 +119,41 @@ Stores pre-supplied or user-defined search engine entries.
 
 ```js
 {
-	url: { type: String, unique: true, required: true, trim: true }, //search key replaced with '%s'
-	urlMobile: { type: String, unique: true, required: false, trim: true }, //search key replaced with '%s'
-	name: { type: String, unique: true, required: true, trim: true },
-	priority: { type: Number, default: 0 }, // larger number = greater priority
-	blockedRegions: [String], // 2 letter ISO-3166-1 country codes
-	locale: String,
-	embeddable: Boolean, // true = embedded iframe; false = external link
-	slug: String, // slug for retrieving icons
-}
+    title: { type: String, required: true, trim: true, index: true },
+    url: { type: String, required: true, trim: true }, //search key replaced with '%s'
+    platform: {
+      desktop: { type: Boolean, default: true },
+      mobile: { type: Boolean, default: true },
+    },
+    priority: { type: Number, default: 0 }, // larger number = greater priority
+    blockedRegions: { type: [String], default: [] }, // 2 letter ISO-3166-1 country codes (e.g. "US")
+    locale: String, // BCP-47 language tag (e.g. "en-US")
+    embeddable: { type: Boolean, default: false }, // true = embedded iframe; false = external link
+    slug: { type: String },
+    style: {
+      // obtained from simple-icon using slugs
+      hex: { type: String, default: '#FFFFFF' },
+      svg: { type: String },
+    },
+  },
 ```
 
 #### Example
 
 ```json
 {
+  "title": "Google",
   "url": "https://www.google.com/search?igu=1&q=%s&oq=%s",
-  "name": "Google",
   "priority": 0,
   "blockedRegions": ["CN", "CU", "IR", "KP", "SY", "VN", "MM"],
-  "locale": "en",
+  "locale": null,
+  "style": {
+    "hex": "#4285F4",
+    "svg": "<svg role=\"img\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><title>Google icon</title><path d=\"M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z\"/></svg>"
+  },
+  "slug": "google",
   "embeddable": true
-},
+  },
 ```
 
 ### Users
@@ -148,11 +162,24 @@ Stores information about registered users.
 
 ```js
 {
-  username: String,
-  password: String,
-  email?: String,
-  telephone?: Number,
- 	config?:
+	name: {
+		type: String,
+		required: [true, "can't be blank"],
+		match: [UsernameRegexp, 'is invalid'],
+		index: true,
+	},
+	email: {
+		type: String,
+		lowercase: true,
+		required: [true, "can't be blank"],
+		match: [EmailRegexp, 'is invalid'],
+		index: true,
+	},
+	image: String,
+	hash: String,
+	salt: String,
+	frames: [{ type: Schema.Types.ObjectId, ref: 'Frame' }],
+	links: [{ type: Schema.Types.ObjectId, ref: 'Link' }],
 }
 ```
 
@@ -160,7 +187,7 @@ Stores information about registered users.
 
 ```js
 {
-  username: 'Jkker',
+  name: 'Jkker',
   password: ********,
   email?: 'me@jerrykjia.com',
   telephone?: *********,
@@ -188,6 +215,30 @@ Stores information about registered users.
 
 `DELETE /api/configs/:username/:engine` (✍ write)
 
+### `frames` endpoint
+
+`GET /api/frames/:owner` (📖 read)
+
+`GET /api/frames/:owner/:engine` (📖 read)
+
+`POST /api/frames/:owner/:engine` (✍ write)
+
+`PATCH /api/frames/:owner/:engine` (✍ write)
+
+`DELETE /api/frames/:owner/:engine` (✍ write)
+
+### `links` endpoint
+
+`GET /api/links/:owner` (📖 read)
+
+`GET /api/links/:owner/:engine` (📖 read)
+
+`POST /api/links/:owner/:engine` (✍ write)
+
+`PATCH /api/links/:owner/:engine` (✍ write)
+
+`DELETE /api/links/:owner/:engine` (✍ write)
+
 ### `users` endpoint
 
 Under construction 🚧
@@ -202,17 +253,17 @@ Under construction 🚧
 
 ## List of research topics
 
-| Tech              | Description / Purpose                                                   | Module/Lib                    | Point |
-| ----------------- | ----------------------------------------------------------------------- | ----------------------------- | ----- |
+| Tech              | Description / Purpose                                        | Module/Lib                    | Point |
+| ----------------- | ------------------------------------------------------------ | ----------------------------- | ----- |
 | SSR/SSG           | A full-stack web development framework used to optimize user experience | `next.js`                     | 3?    |
-| SPA               | Client-side routing to optimize user experience                         | `next/router`, `react router` | 2     |
-| Authentication    | To preserve settings for different users                                | `passport.js`                 | 2     |
-| HTTP Proxy        | Server-side module to proxy websites is needed                          | `http-proxy`                  | 2     |
-| CSS Framework     | For global styling & dark theme support                                 | `tailwind.css`                | 2     |
-| CSS Processor     | For both preprocessing & postprocessing                                 | `postcss`, `scss`             | 2     |
-| Automated Testing | To test site functionality                                              | `playwright`                  | 5     |
-| Configuration     | To store environment variables for deployment                           | `dotenv`                      | 3     |
-| External API      | See below                                                               | See below                     | 2+    |
+| SPA               | Client-side routing to optimize user experience              | `next/router`, `react router` | 2     |
+| Authentication    | To preserve settings for different users                     | `passport.js`                 | 2     |
+| HTTP Proxy        | Server-side module to proxy websites is needed               | `http-proxy`                  | 2     |
+| CSS Framework     | For global styling & dark theme support                      | `tailwind.css`                | 2     |
+| CSS Processor     | For both preprocessing & postprocessing                      | `postcss`, `scss`             | 2     |
+| Automated Testing | To test site functionality                                   | `playwright`                  | 5     |
+| Configuration     | To store environment variables for deployment                | `dotenv`                      | 3     |
+| External API      | See below                                                    | See below                     | 2+    |
 
 ### External APIs
 
@@ -253,3 +304,4 @@ https://github.com/Jkker/metasearch
 # Acknowledgements
 
 Inspired by [ifrontend-xyz/research](https://github.com/ifrontend-xyz/research)
+
