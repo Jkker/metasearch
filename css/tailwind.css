@@ -162,7 +162,7 @@ html {
     @apply flex-center;
   }
   .app-container .ant-spin-container{
-    @apply flex flex-col h-screen w-screen
+    @apply flex flex-col h-screen w-screen !important;
   }
 }
 
