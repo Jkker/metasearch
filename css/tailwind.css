@@ -161,9 +161,6 @@ html {
   .ant-spin-nested-loading > div > .ant-spin {
     @apply flex-center;
   }
-  #search-app-loading > div.ant-spin-container {
-    @apply flex flex-col h-screen w-screen items-stretch !important;
-  }
 }
 
 #weather > div {

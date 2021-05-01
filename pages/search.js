@@ -346,7 +346,7 @@ export default function Search(props) {
   const [dropdownVisible, setDropdownVisible] = useState(false)
 
   return (
-    <div className="app-container">
+    <>
       {/* Custom HTML head */}
       <Head>
         <title>
@@ -354,7 +354,8 @@ export default function Search(props) {
         </title>
       </Head>
       {/* HTML Body */}
-      <Loading spinning={sessionLoading || loading} id="search-app-loading">
+      <Loading spinning={sessionLoading || loading}>
+        <div className="app-container flex flex-col h-screen w-screen items-stretch"></div>
         <div className="search-header-container h-8 flex w-screen mt-2 mb-1 justify-between items-center flex-nowrap text-center flex-none head-container bg-white dark:bg-gray-900 z-10">
           <div id="search-header-left" className="flex flex-auto flex-center max-w-screen-md">
             {/* Logo */}
@@ -617,6 +618,6 @@ export default function Search(props) {
           )}
         </div>
       </Loading>
-    </div>
+    </>
   )
 }
