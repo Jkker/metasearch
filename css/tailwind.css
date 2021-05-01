@@ -161,8 +161,8 @@ html {
   .ant-spin-nested-loading > div > .ant-spin {
     @apply flex-center;
   }
-  .app-container .ant-spin-container{
-    @apply flex flex-col h-screen w-screen !important;
+  #search-app-loading > div.ant-spin-container {
+    @apply flex flex-col h-screen w-screen items-stretch !important;
   }
 }
 
