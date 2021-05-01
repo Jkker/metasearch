@@ -491,6 +491,7 @@ export default function Search(props) {
                 setLoading={setLoading}
                 session={session}
                 DEBUG={DEBUG}
+                resolvedTheme={resolvedTheme}
               />
             ) : (
               <Tabs

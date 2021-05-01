@@ -89,7 +89,7 @@ html {
     }
   }
   .responsive-element {
-    @apply border border-gray-300 dark:border-gray-600 border-solid focus:ring focus:border-blue-500 dark:focus:border-blue-500  hover:border-blue-500 dark:hover:border-blue-500 ring-blue-400 ring-opacity-40 duration-200;
+    @apply border border-gray-300 dark:border-gray-600 border-solid focus:ring focus:border-blue-500 dark:focus:border-blue-500  hover:border-blue-500 dark:hover:border-blue-500 ring-blue-400 ring-opacity-40 duration-200 !important;
   }
   .remark-code-title {
     @apply px-5 py-3 font-mono text-sm font-bold text-gray-200 bg-gray-700 rounded-t;
@@ -127,16 +127,6 @@ html {
   .ant-tabs-tab {
     @apply flex justify-between items-center p-0 m-0 dark:bg-gray-800 dark:text-white;
   }
-  .ant-tabs-nav-add,
-  .ant-tabs-nav-operations,
-  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active,
-  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active,
-  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
-  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab,
-  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
-  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
-    @apply dark:bg-gray-800 dark:text-white;
-  }
   label,
   .ant-form-item-label > label .ant-form-item-tooltip {
     @apply dark:text-white;
@@ -163,6 +153,13 @@ html {
   .ant-spin-nested-loading > div > .ant-spin {
     @apply flex-center;
   }
+  .invert-filter-imp {
+    filter: invert(1) !important;
+  }
+  .ant-tabs-tab,
+  .ant-tabs-tab.ant-tabs-tab-with-remove {
+    @apply dark:text-white dark:bg-transparent responsive-element;
+  }
 }
 
 #weather > div {
@@ -173,4 +170,8 @@ html {
   left: 0;
   /* background: rgba(255, 255, 255, 0.45); */
   /* backdrop-filter: blur(3px); */
+}
+.ant-tabs-tab {
+  background: transparent !important;
+  border-width: 1px;
 }

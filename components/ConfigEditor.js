@@ -118,7 +118,10 @@ export default function Editor(props) {
           className="w-full h-full flex-col flex-center flex-nowrap max-w-screen"
           tab={
             <div className="tab-title flex-center">
-              <SVGFromString svg={e.style?.svg} />
+              <SVGFromString
+                svg={e.style?.svg}
+                style={props.resolvedTheme === 'dark' ? { filter: 'invert(1)' } : {}}
+              />
               {e.title}
             </div>
           }

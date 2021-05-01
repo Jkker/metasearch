@@ -30,9 +30,6 @@
 
 # About The Project
 
-
-# About The Project
-
 This project is an highly customizable aggregate search engine that helps users to lookup the same keyword on across multiple search engines, especially useful when conducting research, looking for resources, or simply browsing a subject of interest.![Index Page](https://pics-1304851365.file.myqcloud.com/img/index.jpeg)
 
 | Default Theme                                                                        | Dark Theme                                                                |
@@ -64,7 +61,7 @@ This project is an highly customizable aggregate search engine that helps users 
 
 - [x] Runtime search engines & links customization.
 - [ ] Recommendation for optimal set of search engine url parameters.
-- [ ] Authentication & customization storage.
+- [x] Authentication & customization storage.
 - [ ] Web proxy for search engines.
 - [ ] Reverse image search aggregator.
 
@@ -97,8 +94,6 @@ _**Note**: when the embedded search result page (`iFrame`) is focused, these key
 You can use **Metasearch** directly at [search.jerrykjia.com](https://search.jerrykjia.com/)
 
 ## Set as Default Search Engine
-
-# Development
 
 # Development
 
@@ -250,27 +245,6 @@ Under construction 🚧
 ## User Flow Chart
 
 ![Metasearch User Flow Chart.jpeg](https://i.loli.net/2021/04/03/lpsxSFdgN8M2AmK.jpg)
-
-## List of research topics
-
-| Tech              | Description / Purpose                                        | Module/Lib                    | Point |
-| ----------------- | ------------------------------------------------------------ | ----------------------------- | ----- |
-| SSR/SSG           | A full-stack web development framework used to optimize user experience | `next.js`                     | 3?    |
-| SPA               | Client-side routing to optimize user experience              | `next/router`, `react router` | 2     |
-| Authentication    | To preserve settings for different users                     | `passport.js`                 | 2     |
-| HTTP Proxy        | Server-side module to proxy websites is needed               | `http-proxy`                  | 2     |
-| CSS Framework     | For global styling & dark theme support                      | `tailwind.css`                | 2     |
-| CSS Processor     | For both preprocessing & postprocessing                      | `postcss`, `scss`             | 2     |
-| Automated Testing | To test site functionality                                   | `playwright`                  | 5     |
-| Configuration     | To store environment variables for deployment                | `dotenv`                      | 3     |
-| External API      | See below                                                    | See below                     | 2+    |
-
-### External APIs
-
-- IP Geolocation API
-- Weather API
-- Numerous search engine API / UI integration
-
 ### Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
