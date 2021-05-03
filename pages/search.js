@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Dropdown, Menu, Switch, Tabs, Tooltip } from 'antd'
 import Loading from 'components/Loading.js'
+import { placeholderText } from 'data/i18n'
 import mobile from 'ismobilejs'
 import parseConfig from 'lib/parseConfig.js'
 import { debounce } from 'lodash'
@@ -27,16 +28,18 @@ import ThemeSwitch from '../components/ThemeSwitch'
 const querystring = require('querystring')
 
 export async function getStaticProps(context) {
-  const name = context.locale
-  const config = await getConfig(name)
+  const locale = context.locale ?? context.defaultLocale
+  const name = locale
+  const config = await getConfig(locale)
+  const placeholder = placeholderText(locale)
   return {
     props: {
       config,
       DEBUG: process.env.NODE_ENV === 'development',
       name,
+      placeholder,
     },
     revalidate: 1,
-    // fallback: 'blocking',
   }
 }
 
@@ -375,7 +378,7 @@ export default function Search(props) {
                 <div className="relative flex-auto">
                   <input
                     aria-label="Metasearch"
-                    placeholder="搜你所想"
+                    placeholder={props.placeholder}
                     type="text"
                     ref={landingSearchBarRef}
                     onChange={handleInputChange}

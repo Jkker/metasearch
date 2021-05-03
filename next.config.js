@@ -11,7 +11,7 @@ module.exports = withBundleAnalyzer(
     },
     i18n: {
       locales: ['en-US', 'zh-CN'],
-      defaultLocale: 'zh-CN',
+      defaultLocale: 'en-US',
     },
     pwa: {
       dest: 'public',

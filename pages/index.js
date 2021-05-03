@@ -2,10 +2,22 @@ import { PageSeo } from '@/components/SEO'
 import siteMetadata from '@/data/siteMetadata'
 import Footer from '@/layouts/Footer'
 import Header from '@/layouts/Header'
+import { placeholderText } from 'data/i18n'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
+
+export async function getStaticProps(context) {
+  const locale = context.locale ?? context.defaultLocale
+  const placeholder = placeholderText(locale)
+  return {
+    props: {
+      DEBUG: process.env.NODE_ENV === 'development',
+      placeholder,
+    },
+  }
+}
 
 export default function Home(props) {
   const [searchKey, setSearchKey] = useState('')
@@ -77,7 +89,7 @@ export default function Home(props) {
           <div className="meta-search-bar w-4/5 sm:max-w-lg relative ">
             <input
               aria-label="Metasearch"
-              placeholder="Search as you like"
+              placeholder={props.placeholder}
               type="text"
               ref={searchBarRef}
               onChange={(e) => setSearchKey(e.target.value)}
