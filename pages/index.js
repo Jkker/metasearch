@@ -75,7 +75,7 @@ export default function Home(props) {
         description={siteMetadata.description}
         url={siteMetadata.siteUrl}
       />
-      <Header override={'bg-transparent text-white'} />
+      <Header />
       <Footer />
       <div className="index-container h-screen relative z-30  bg-gray-700 bg-cover bg-no-repeat bg-center image shadow-2xl">
         <div className="meta-search-index-page bg-transparent w-full h-full flex-center flex-col">

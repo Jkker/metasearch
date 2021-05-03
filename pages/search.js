@@ -396,7 +396,7 @@ export default function Search(props) {
         </title>
       </Head>
       {/* HTML Body */}
-      <Loading spinning={sessionLoading || loading}>
+      <Loading spinning={loading}>
         <div className="app-container flex flex-col h-screen w-screen items-stretch">
           <div className="search-header-container h-8 flex w-screen my-2 justify-between items-center flex-nowrap text-center flex-none head-container bg-white dark:bg-gray-900 z-10">
             <div id="search-header-left" className="flex flex-auto flex-center max-w-screen-md">
@@ -413,7 +413,7 @@ export default function Search(props) {
                 </a>
               </Link>
               {/* Search Bar */}
-              <div className="meta-search-bar flex-auto focus:shadow-md hover:shadow focus-within:shadow-md flex flex-nowrap">
+              <div className="meta-search-bar flex-auto focus:shadow hover:shadow focus-within:shadow flex flex-nowrap">
                 <div className="relative flex-auto">
                   <input
                     aria-label="Metasearch"
@@ -421,7 +421,7 @@ export default function Search(props) {
                     type="text"
                     ref={landingSearchBarRef}
                     onChange={handleInputChange}
-                    className="flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-200 p-3 pr-8 text-base outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0"
+                    className="flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100 p-3 pr-8 text-base outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0"
                     value={inputKey}
                   />
                   {/* Search Bar Actions */}
@@ -474,48 +474,50 @@ export default function Search(props) {
               <div className="h-full mx-2 border-l dark:border-gray-600" />
             </div>
             <div id="search-header-right" className="flex flex-0 flex-center space-x-3 mr-1">
-              {session ? (
-                <Dropdown
-                  overlay={
-                    <Menu>
-                      <Menu.Item className="flex justify-between items-center">
-                        Edit
-                        <Tooltip title="Toggle Edit Mode">
-                          <Switch
-                            className="ml-2"
-                            checked={edit}
-                            onChange={toggleEdit}
-                            checkedChildren={<SettingOutlined />}
-                            unCheckedChildren={<LockOutlined />}
-                          />
-                        </Tooltip>
-                      </Menu.Item>
-                      <Menu.Item className="flex justify-between items-center">
-                        <button onClick={() => signOut()}>
-                          Logout <LogoutOutlined className="ml-2" />
-                        </button>
-                      </Menu.Item>
-                    </Menu>
-                  }
-                >
-                  {session.user?.image ? (
-                    <Avatar
-                      icon={<UserOutlined />}
-                      src={session?.user?.image}
-                      size={28}
-                      className="flex-center"
-                    />
-                  ) : (
-                    <Avatar>{session.user?.name?.charAt(0)}</Avatar>
-                  )}
-                </Dropdown>
-              ) : (
-                <Tooltip title="Sign In">
-                  <button onClick={() => signIn()}>
-                    <Avatar icon={<UserOutlined />} size={28} className="flex-center" />
-                  </button>
-                </Tooltip>
-              )}
+              <Loading spinning={sessionLoading}>
+                {session ? (
+                  <Dropdown
+                    overlay={
+                      <Menu>
+                        <Menu.Item className="flex justify-between items-center">
+                          Edit
+                          <Tooltip title="Toggle Edit Mode">
+                            <Switch
+                              className="ml-2"
+                              checked={edit}
+                              onChange={toggleEdit}
+                              checkedChildren={<SettingOutlined />}
+                              unCheckedChildren={<LockOutlined />}
+                            />
+                          </Tooltip>
+                        </Menu.Item>
+                        <Menu.Item className="flex justify-between items-center">
+                          <button onClick={() => signOut()}>
+                            Logout <LogoutOutlined className="ml-2" />
+                          </button>
+                        </Menu.Item>
+                      </Menu>
+                    }
+                  >
+                    {session.user?.image ? (
+                      <Avatar
+                        icon={<UserOutlined />}
+                        src={session?.user?.image}
+                        size={28}
+                        className="flex-center"
+                      />
+                    ) : (
+                      <Avatar>{session.user?.name?.charAt(0)}</Avatar>
+                    )}
+                  </Dropdown>
+                ) : (
+                  <Tooltip title="Sign In">
+                    <button onClick={() => signIn()}>
+                      <Avatar icon={<UserOutlined />} size={28} className="flex-center" />
+                    </button>
+                  </Tooltip>
+                )}
+              </Loading>
 
               {/* <div className="h-full ml-2 border-l dark:border-gray-600"></div> */}
               <div className="flex-0 ">
