@@ -56,11 +56,13 @@ function ClientOnly({ children, hasMounted }) {
 }
 
 export default function Search(props) {
-  const [session, sessionLoading] = useSession()
+  // const DEBUG = props.DEBUG
+  const DEBUG = true
+  const DEBUG_FRAMES = false
 
   const router = useRouter()
-  // const DEBUG = props.DEBUG
-  const DEBUG = false
+  const [session, sessionLoading] = useSession()
+
   const isMobile = mobile().any
   const platform = isMobile ? 'mobile' : 'desktop'
   // console.log('platform:', platform)
@@ -68,32 +70,49 @@ export default function Search(props) {
   const [config, setConfig] = useState(props.config)
   const { links, frames } = parseConfig(config, platform)
 
-  const [hasMounted, setHasMounted] = React.useState(false)
+  const [hydrated, setHydrated] = React.useState(false)
 
   const { data: geoData, error: geoError } = useSWR('/api/geoip/country', fetcher)
 
   const { resolvedTheme } = useTheme()
 
   // * Search Functionality
-  const defaultEngine = frames[0].title
+  const defaultEngine = useRef(frames[0].title)
 
-  const engine = useRef(router.query?.engine ?? defaultEngine)
-  const searchKey = useRef(router.query?.q ?? '')
+  const search = useRef({
+    q: '',
+    engine: defaultEngine.current,
+  })
   const [inputKey, setInputKey] = useState(router.query?.q ?? '')
   const [refresher, setRefresher] = useState(0)
-
   const [edit, setEdit] = useState(false)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (router.isReady) {
-      console.log('router.isReady')
-      setHasMounted(true)
-      if (router.query.edit && router.query.edit !== '0') {
-        if (DEBUG) console.log('setEdit: ', router.query.edit)
-        setEdit(router.query.edit)
+    if (DEBUG)
+      if (router.isReady) {
+        console.log(
+          'router.isReady\n',
+          'Search: ',
+          search.current.q,
+          '→',
+          router.query.q,
+          '\nEngine: ',
+          search.current.engine,
+          '→',
+          router.query.engine
+        )
+        search.current.q = router.query.q
+        search.current.engine = router.query.engine
+          ? router.query.engine
+          : defaultEngine.current
+        setInputKey(router.query.q)
+        setHydrated(true)
+        if (router.query.edit && router.query.edit !== '0') {
+          if (DEBUG) console.log('setEdit: ', router.query.edit)
+          setEdit(router.query.edit)
+        }
       }
-    }
   }, [router.isReady])
 
   useEffect(() => {
@@ -108,11 +127,11 @@ export default function Search(props) {
       edit
         ? {
             pathname: router.pathname,
-            query: { q: searchKey.current, engine: engine.current },
+            query: { q: search.current.q, engine: search.current.engine },
           }
         : {
             pathname: router.pathname,
-            query: { q: searchKey.current, engine: engine.current, edit: 1 },
+            query: { q: search.current.q, engine: search.current.engine, edit: 1 },
           },
       undefined,
       {
@@ -128,21 +147,25 @@ export default function Search(props) {
       console.log('Mounted')
     }
     const handleRouteChange = (url, { shallow }) => {
-      const query = querystring.parse(url.split('?').slice(1).join())
-      const newEng = query.engine ?? defaultEngine
-      const newSearchKey = query.q ?? ''
-      if (engine.current !== newEng) {
-        engine.current = newEng
-        if (DEBUG) {
-          console.log('Engine:', newEng)
+      if (router.isReady) {
+        const query = querystring.parse(url.split('?').slice(1).join())
+        if (DEBUG)
+          console.log('routeChangeStart', JSON.stringify(query, null, 2), '\nshallow:', shallow)
+        const newEng = query.engine ?? defaultEngine.current
+        const newSearchKey = query.q ?? ''
+        if (search.current.engine !== newEng) {
+          if (DEBUG) {
+            console.log('handleRouteChange Engine:', search.current.engine, '→', newEng)
+          }
+          search.current.engine = newEng
         }
-      }
-      if (newSearchKey !== searchKey.current) {
-        if (DEBUG) {
-          console.log('Search:', newSearchKey)
+        if (newSearchKey !== search.current.q) {
+          if (DEBUG) {
+            console.log('handleRouteChange Search:', search.current.q, '→', newSearchKey)
+          }
+          search.current.q = newSearchKey
+          setInputKey(newSearchKey)
         }
-        searchKey.current = newSearchKey
-        setInputKey(newSearchKey)
       }
     }
     router.events.on('routeChangeStart', handleRouteChange)
@@ -154,37 +177,36 @@ export default function Search(props) {
   // Change default engine based on geo-ip data (skip engines unavailable in current region)
   useEffect(() => {
     if (!router.query?.engine && geoData) {
-      let defaultEngine
       for (const e of frames) {
         if (!e.blockedRegions?.includes(geoData.country)) {
-          defaultEngine = e.title
+          defaultEngine.current = e.title
           break
         }
       }
-      if (defaultEngine && defaultEngine !== engine.current) {
+      if (defaultEngine.current && defaultEngine.current !== search.current.engine) {
         if (DEBUG)
-          console.log('GEO API responded: change engine from', engine.current, 'to', defaultEngine)
-        handleSetEngine(defaultEngine)
+          console.log(
+            'GEO API responded:',
+            search.current.engine,
+            '→',
+            defaultEngine.current
+          )
+        handleSetEngine(defaultEngine.current)
       }
     }
   }, [geoData])
 
   const handleSetSearch = (newSearchKey) => {
     const trimmedKey = newSearchKey.trim()
+    if (DEBUG) console.log('handleSetSearch:', search.current.q, '→', trimmedKey)
 
-    if (trimmedKey === searchKey.current) {
-      if (DEBUG) {
-        console.log('Refresh Iframe')
-      }
+    if (trimmedKey === search.current.q) {
       setRefresher(refresher + 1)
       return
     } else if (router.isReady) {
-      if (DEBUG) {
-        console.log('Search:', newSearchKey)
-      }
-      searchKey.current = newSearchKey
+      search.current.q = newSearchKey
       router.push(
-        { pathname: router.pathname, query: { q: newSearchKey, engine: engine.current } },
+        { pathname: router.pathname, query: { ...search.current, q: newSearchKey } },
         undefined,
         {
           shallow: true,
@@ -192,7 +214,7 @@ export default function Search(props) {
       )
     }
   }
-  const debounceSetSearch = useCallback(debounce(handleSetSearch, 1000), [engine.current])
+  const debounceSetSearch = useCallback(debounce(handleSetSearch, 1000), [search.current.engine])
 
   const handleInputChange = (e) => {
     setInputKey(e.target.value)
@@ -200,20 +222,26 @@ export default function Search(props) {
   }
 
   const handleSetEngine = (newEng) => {
-    if (newEng === engine.current) {
-      if (DEBUG) {
-        console.log('Refresh Iframe')
-      }
+    if (DEBUG)
+      console.log(
+        'handleSetEngine:',
+        search.current.engine,
+        '→',
+        newEng,
+        '\nsearch.current.q =',
+        search.current.q,
+        '\nrouter.query?.q =',
+        router.query?.q,
+        '\ninputKey =',
+        inputKey
+      )
+    if (newEng === search.current.engine) {
       setRefresher(refresher + 1)
       return
     } else if (router.isReady) {
-      if (DEBUG) {
-        console.log('Engine:', newEng, '; inputKey:', inputKey)
-        console.log('Engine:', newEng, '; searchKey:', searchKey.current)
-      }
-      engine.current = newEng
+      search.current.engine = newEng
       router.push(
-        { pathname: router.pathname, query: { q: searchKey.current, engine: newEng } },
+        { pathname: router.pathname, query: { ...search.current, engine: newEng } },
         undefined,
         {
           shallow: true,
@@ -224,10 +252,11 @@ export default function Search(props) {
 
   // When logo or clear button is clicked
   const handleReset = () => {
+    if (DEBUG) console.log('handleReset')
     setInputKey('')
-    searchKey.current = ''
+    search.current.q = ''
     router.push(
-      { pathname: router.pathname, query: { q: '', engine: engine.current } },
+      { pathname: router.pathname, query: { q: '', engine: search.current.engine } },
       undefined,
       {
         shallow: true,
@@ -239,17 +268,17 @@ export default function Search(props) {
   const renderCount = useRef(0)
   useEffect(() => {
     renderCount.current++
-    if (props.DEBUG) console.log('renderCount', renderCount.current)
+    if (DEBUG) console.log('renderCount', renderCount.current)
   })
 
   // Auto focus search bar after refresh on desktop
   const landingSearchBarRef = useRef(null)
 
   useEffect(() => {
-    if (!searchKey.current && !inputKey && !isMobile) {
+    if (!search.current.q && !inputKey && !isMobile) {
       landingSearchBarRef?.current?.focus?.()
     }
-  }, [searchKey.current])
+  })
 
   const enginesList = frames.map(({ title }) => title)
   const linksList = links.map(({ title }) => title)
@@ -287,7 +316,7 @@ export default function Search(props) {
             } else if (e.ctrlKey) {
               // Switch to the next tab on ctrl + right arrow
               e.preventDefault()
-              const currEngIdx = enginesList.indexOf(engine.current)
+              const currEngIdx = enginesList.indexOf(search.current.engine)
               handleSetEngine(enginesList[currEngIdx + 1] ?? enginesList[0])
             } else if (e.shiftKey) {
               // Switch to the next link on ctrl + right arrow
@@ -308,7 +337,7 @@ export default function Search(props) {
             } else if (e.ctrlKey) {
               // Switch to the previous tab on ctrl + left arrow
               e.preventDefault()
-              const currEngIdx = enginesList.indexOf(engine.current)
+              const currEngIdx = enginesList.indexOf(search.current.engine)
               handleSetEngine(enginesList[currEngIdx - 1] ?? enginesList[enginesList.length - 1])
             } else if (e.shiftKey) {
               // Switch to the previous link on shift + left arrow
@@ -363,7 +392,7 @@ export default function Search(props) {
       {/* Custom HTML head */}
       <Head>
         <title>
-          {searchKey.current ? `${searchKey.current} - ${engine.current}` : 'Metasearch'}
+          {search.current.q ? `${search.current.q} - ${search.current.engine}` : 'Metasearch'}
         </title>
       </Head>
       {/* HTML Body */}
@@ -510,7 +539,7 @@ export default function Search(props) {
               <Tabs
                 className="dark:text-white dark:bg-gray-900"
                 type="card"
-                activeKey={engine.current}
+                activeKey={search.current.engine}
                 onTabClick={handleSetEngine}
                 tabBarExtraContent={
                   // links container
@@ -526,7 +555,7 @@ export default function Search(props) {
                               <a
                                 title={title}
                                 key={title}
-                                href={processUrl(url, searchKey.current)}
+                                href={processUrl(url, search.current.q)}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="links"
@@ -541,7 +570,7 @@ export default function Search(props) {
                       className="lg:hidden"
                     >
                       <button
-                        className="rounded-sm responsive-element h-8-1 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none z-20"
+                        className="rounded-sm responsive-element h-10 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none z-20"
                         onClick={(e) => e.preventDefault()}
                       >
                         Links <LinkOutlined className="ml-1" />
@@ -555,10 +584,10 @@ export default function Search(props) {
                             title={title}
                             key={title}
                             id={title + '-link'}
-                            href={processUrl(url, searchKey.current)}
+                            href={processUrl(url, search.current.q)}
                             target="_blank"
                             rel="noreferrer"
-                            className="rounded-sm responsive-element h-8-1 p-1 lg:p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center"
+                            className="rounded-sm responsive-element h-10 p-1 lg:p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center"
                           >
                             {title} <LinkOutlined className="ml-1" />
                           </a>
@@ -585,17 +614,17 @@ export default function Search(props) {
                       </div>
                     }
                   >
-                    {DEBUG ? (
+                    {DEBUG_FRAMES ? (
                       <section>
                         <ul className="ml-24 h-full flex flex-col justify-center leading-loose list-disc dark:text-white">
                           <h2>
                             <b>Search</b>
                           </h2>
-                          <li>Search Key: {searchKey.current}</li>
-                          <li>Engine: {engine.current}</li>
+                          <li>Search Key: {search.current.q}</li>
+                          <li>Engine: {search.current.engine}</li>
                           <li>Country: {geoData?.country}</li> <li>IP: {geoData?.ip}</li>
                           <li>Theme: {resolvedTheme}</li>
-                          <li>Query: {searchKey.current}</li>
+                          <li>Query: {search.current.q}</li>
                           <h2>
                             <b>User</b>
                           </h2>
@@ -609,11 +638,11 @@ export default function Search(props) {
                         </ul>
                       </section>
                     ) : (
-                      <ClientOnly hasMounted={hasMounted}>
+                      <ClientOnly hasMounted={hydrated}>
                         <iframe
                           title={title}
                           className="frame"
-                          src={processUrl(url, searchKey.current)}
+                          src={processUrl(url, search.current.q)}
                           key={title + refresher}
                           width="100%"
                           height="100%"
