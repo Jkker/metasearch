@@ -59,6 +59,7 @@ export default function Search(props) {
   const [session, sessionLoading] = useSession()
 
   const router = useRouter()
+  // const DEBUG = props.DEBUG
   const DEBUG = false
   const isMobile = mobile().any
   const platform = isMobile ? 'mobile' : 'desktop'
@@ -85,12 +86,19 @@ export default function Search(props) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (router.isReady && router.query.edit !== '0') setEdit(router.query.edit)
+    if (router.isReady) {
+      console.log('router.isReady')
+      setHasMounted(true)
+      if (router.query.edit && router.query.edit !== '0') {
+        if (DEBUG) console.log('setEdit: ', router.query.edit)
+        setEdit(router.query.edit)
+      }
+    }
   }, [router.isReady])
 
   useEffect(() => {
     if (!sessionLoading && session && session.user.name !== props.name) {
-      console.log('Updating config to: ', session.user.name)
+      if (DEBUG) console.log('Updating config to: ', session.user.name)
       setConfig(session.user.config)
     }
   }, [sessionLoading])
@@ -116,7 +124,9 @@ export default function Search(props) {
 
   // Respond to route change events (back / forward button click)
   useEffect(() => {
-    setHasMounted(true)
+    if (DEBUG) {
+      console.log('Mounted')
+    }
     const handleRouteChange = (url, { shallow }) => {
       const query = querystring.parse(url.split('?').slice(1).join())
       const newEng = query.engine ?? defaultEngine
@@ -152,9 +162,9 @@ export default function Search(props) {
         }
       }
       if (defaultEngine && defaultEngine !== engine.current) {
-        handleSetEngine(defaultEngine)
         if (DEBUG)
           console.log('GEO API responded: change engine from', engine.current, 'to', defaultEngine)
+        handleSetEngine(defaultEngine)
       }
     }
   }, [geoData])
@@ -168,7 +178,7 @@ export default function Search(props) {
       }
       setRefresher(refresher + 1)
       return
-    } else {
+    } else if (router.isReady) {
       if (DEBUG) {
         console.log('Search:', newSearchKey)
       }
@@ -196,7 +206,7 @@ export default function Search(props) {
       }
       setRefresher(refresher + 1)
       return
-    } else {
+    } else if (router.isReady) {
       if (DEBUG) {
         console.log('Engine:', newEng, '; inputKey:', inputKey)
         console.log('Engine:', newEng, '; searchKey:', searchKey.current)
