@@ -72,8 +72,8 @@ html {
   .link {
     @apply text-blue-500 hover:text-blue-600 dark:hover:text-blue-400;
   }
-  .h-8-1 {
-    height: 1.9rem;
+  .h-9-1 {
+    height: 2.2rem;
   }
 }
 
@@ -124,41 +124,8 @@ html {
     margin-right: -9px;
     @apply bg-blue-500;
   }
-  .ant-tabs-tab {
-    @apply flex justify-between items-center p-0 m-0 dark:bg-gray-800 dark:text-white;
-  }
-  label,
-  .ant-form-item-label > label .ant-form-item-tooltip {
-    @apply dark:text-white;
-  }
-  .ant-tabs-left > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane,
-  .ant-tabs-left > div > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
-    @apply p-0;
-  }
-  .ant-row.ant-form-item {
-    @apply sm:flex-nowrap;
-  }
-  div.ant-tabs-nav {
-    @apply my-1 h-8;
-  }
-  .ant-switch-inner {
-    @apply grid;
-  }
-  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
-  .ant-tabs-card.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
-  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
-  .ant-tabs-card.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
-    @apply m-0;
-  }
-  .ant-spin-nested-loading > div > .ant-spin {
-    @apply flex-center;
-  }
   .invert-filter-imp {
     filter: invert(1) !important;
-  }
-  .ant-tabs-tab,
-  .ant-tabs-tab.ant-tabs-tab-with-remove {
-    @apply dark:text-white dark:bg-transparent responsive-element;
   }
 }
 
@@ -170,8 +137,4 @@ html {
   left: 0;
   /* background: rgba(255, 255, 255, 0.45); */
   /* backdrop-filter: blur(3px); */
-}
-.ant-tabs-tab {
-  background: transparent !important;
-  border-width: 1px;
 }

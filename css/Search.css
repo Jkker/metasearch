@@ -20,3 +20,44 @@
   height: 34px;
   width: 34px;
 }
+label,
+.ant-form-item-label > label .ant-form-item-tooltip {
+  @apply dark:text-white;
+}
+.ant-tabs-left > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane,
+.ant-tabs-left > div > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
+  @apply p-0;
+}
+.ant-row.ant-form-item {
+  @apply sm:flex-nowrap;
+}
+.ant-tabs-nav {
+  @apply my-1 h-9;
+}
+.ant-switch-inner {
+  @apply grid;
+}
+.ant-spin-nested-loading > div > .ant-spin {
+  @apply flex justify-center items-center;
+}
+.ant-tabs-tab {
+  @apply dark:text-white flex justify-between px-3 items-center bg-gray-100 dark:bg-gray-700 h-9 m-0 border-transparent !important;
+}
+.ant-tabs-tab.ant-tabs-tab-active {
+  @apply bg-white dark:bg-gray-900 !important;
+}
+.ant-tabs-bottom > .ant-tabs-nav:before,
+.ant-tabs-bottom > div > .ant-tabs-nav:before,
+.ant-tabs-top > .ant-tabs-nav:before,
+.ant-tabs-top > div > .ant-tabs-nav:before {
+  @apply dark:border-gray-600;
+}
+span.anticon.anticon-close {
+  @apply dark:text-white;
+}
+.ant-spin-lg.ant-spin-dot {
+  font-size: 128px !important;
+}
+.ant-spin-nested-loading > div > .ant-spin {
+  max-height: 100% !important;
+}

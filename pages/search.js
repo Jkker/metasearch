@@ -57,7 +57,7 @@ function ClientOnly({ children, hasMounted }) {
 
 export default function Search(props) {
   // const DEBUG = props.DEBUG
-  const DEBUG = true
+  const DEBUG_LOGGING = true
   const DEBUG_FRAMES = false
 
   const router = useRouter()
@@ -89,7 +89,7 @@ export default function Search(props) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (DEBUG)
+    if (DEBUG_LOGGING)
       if (router.isReady) {
         console.log(
           'router.isReady\n',
@@ -109,7 +109,7 @@ export default function Search(props) {
         setInputKey(router.query.q)
         setHydrated(true)
         if (router.query.edit && router.query.edit !== '0') {
-          if (DEBUG) console.log('setEdit: ', router.query.edit)
+          if (DEBUG_LOGGING) console.log('setEdit: ', router.query.edit)
           setEdit(router.query.edit)
         }
       }
@@ -117,7 +117,7 @@ export default function Search(props) {
 
   useEffect(() => {
     if (!sessionLoading && session && session.user.name !== props.name) {
-      if (DEBUG) console.log('Updating config to: ', session.user.name)
+      if (DEBUG_LOGGING) console.log('Updating config to: ', session.user.name)
       setConfig(session.user.config)
     }
   }, [sessionLoading])
@@ -143,24 +143,24 @@ export default function Search(props) {
 
   // Respond to route change events (back / forward button click)
   useEffect(() => {
-    if (DEBUG) {
+    if (DEBUG_LOGGING) {
       console.log('Mounted')
     }
     const handleRouteChange = (url, { shallow }) => {
       if (router.isReady) {
         const query = querystring.parse(url.split('?').slice(1).join())
-        if (DEBUG)
+        if (DEBUG_LOGGING)
           console.log('routeChangeStart', JSON.stringify(query, null, 2), '\nshallow:', shallow)
         const newEng = query.engine ?? defaultEngine.current
         const newSearchKey = query.q ?? ''
         if (search.current.engine !== newEng) {
-          if (DEBUG) {
+          if (DEBUG_LOGGING) {
             console.log('handleRouteChange Engine:', search.current.engine, '→', newEng)
           }
           search.current.engine = newEng
         }
         if (newSearchKey !== search.current.q) {
-          if (DEBUG) {
+          if (DEBUG_LOGGING) {
             console.log('handleRouteChange Search:', search.current.q, '→', newSearchKey)
           }
           search.current.q = newSearchKey
@@ -184,7 +184,7 @@ export default function Search(props) {
         }
       }
       if (defaultEngine.current && defaultEngine.current !== search.current.engine) {
-        if (DEBUG)
+        if (DEBUG_LOGGING)
           console.log(
             'GEO API responded:',
             search.current.engine,
@@ -198,7 +198,7 @@ export default function Search(props) {
 
   const handleSetSearch = (newSearchKey) => {
     const trimmedKey = newSearchKey.trim()
-    if (DEBUG) console.log('handleSetSearch:', search.current.q, '→', trimmedKey)
+    if (DEBUG_LOGGING) console.log('handleSetSearch:', search.current.q, '→', trimmedKey)
 
     if (trimmedKey === search.current.q) {
       setRefresher(refresher + 1)
@@ -222,7 +222,7 @@ export default function Search(props) {
   }
 
   const handleSetEngine = (newEng) => {
-    if (DEBUG)
+    if (DEBUG_LOGGING)
       console.log(
         'handleSetEngine:',
         search.current.engine,
@@ -252,7 +252,7 @@ export default function Search(props) {
 
   // When logo or clear button is clicked
   const handleReset = () => {
-    if (DEBUG) console.log('handleReset')
+    if (DEBUG_LOGGING) console.log('handleReset')
     setInputKey('')
     search.current.q = ''
     router.push(
@@ -268,7 +268,7 @@ export default function Search(props) {
   const renderCount = useRef(0)
   useEffect(() => {
     renderCount.current++
-    if (DEBUG) console.log('renderCount', renderCount.current)
+    if (DEBUG_LOGGING) console.log('renderCount', renderCount.current)
   })
 
   // Auto focus search bar after refresh on desktop
@@ -398,7 +398,7 @@ export default function Search(props) {
       {/* HTML Body */}
       <Loading spinning={sessionLoading || loading}>
         <div className="app-container flex flex-col h-screen w-screen items-stretch">
-          <div className="search-header-container h-8 flex w-screen mt-2 mb-1 justify-between items-center flex-nowrap text-center flex-none head-container bg-white dark:bg-gray-900 z-10">
+          <div className="search-header-container h-8 flex w-screen my-2 justify-between items-center flex-nowrap text-center flex-none head-container bg-white dark:bg-gray-900 z-10">
             <div id="search-header-left" className="flex flex-auto flex-center max-w-screen-md">
               {/* Logo */}
               <Link href="/">
@@ -421,7 +421,7 @@ export default function Search(props) {
                     type="text"
                     ref={landingSearchBarRef}
                     onChange={handleInputChange}
-                    className="flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100 p-3 pr-8 text-base outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0"
+                    className="flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-200 p-3 pr-8 text-base outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0"
                     value={inputKey}
                   />
                   {/* Search Bar Actions */}
@@ -532,7 +532,7 @@ export default function Search(props) {
                 loading={loading}
                 setLoading={setLoading}
                 session={session}
-                DEBUG={DEBUG}
+                DEBUG={DEBUG_LOGGING}
                 resolvedTheme={resolvedTheme}
               />
             ) : (
@@ -570,7 +570,7 @@ export default function Search(props) {
                       className="lg:hidden"
                     >
                       <button
-                        className="rounded-sm responsive-element h-10 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none z-20"
+                        className="rounded-sm responsive-element h-9-1 p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center focus:outline-none z-20"
                         onClick={(e) => e.preventDefault()}
                       >
                         Links <LinkOutlined className="ml-1" />
@@ -587,7 +587,7 @@ export default function Search(props) {
                             href={processUrl(url, search.current.q)}
                             target="_blank"
                             rel="noreferrer"
-                            className="rounded-sm responsive-element h-10 p-1 lg:p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center"
+                            className="rounded-sm responsive-element h-9-1 p-1 lg:p-2 flex flex-nowrap whitespace-nowrap justify-evenly items-center"
                           >
                             {title} <LinkOutlined className="ml-1" />
                           </a>
