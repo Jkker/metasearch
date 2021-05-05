@@ -5,7 +5,7 @@ import {
   LockOutlined,
   LogoutOutlined,
   SettingOutlined,
-  UserOutlined
+  UserOutlined,
 } from '@ant-design/icons'
 import { Avatar, Dropdown, Menu, Switch, Tabs, Tooltip } from 'antd'
 import Loading from 'components/Loading.js'
@@ -88,8 +88,8 @@ export default function Search(props) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (DEBUG_LOGGING)
-      if (router.isReady) {
+    if (router.isReady) {
+      if (DEBUG_LOGGING)
         console.log(
           'router.isReady\n',
           'Search: ',
@@ -101,15 +101,15 @@ export default function Search(props) {
           '→',
           router.query.engine
         )
-        search.current.q = router.query.q
-        search.current.engine = router.query.engine ? router.query.engine : defaultEngine.current
-        setInputKey(router.query.q)
-        setHydrated(true)
-        if (router.query.edit && router.query.edit !== '0') {
-          if (DEBUG_LOGGING) console.log('setEdit: ', router.query.edit)
-          setEdit(router.query.edit)
-        }
+      search.current.q = router.query.q
+      search.current.engine = router.query.engine ? router.query.engine : defaultEngine.current
+      setInputKey(router.query.q)
+      setHydrated(true)
+      if (router.query.edit && router.query.edit !== '0') {
+        if (DEBUG_LOGGING) console.log('setEdit: ', router.query.edit)
+        setEdit(router.query.edit)
       }
+    }
   }, [router.isReady])
 
   useEffect(() => {
