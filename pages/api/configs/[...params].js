@@ -20,17 +20,19 @@ export default async function handler(req, res) {
   } = req
   const [name, _id] = params
 
-  if (session) {
-    userQuery['_id'] = session.user._id
-    console.log('Session! name', name, '; engineId:', _id)
-  } else {
-    userQuery['name'] = name
-    console.log('NO Session! name:', name, '; engineId:', _id)
-  }
 
-  await dbConnect()
 
   try {
+    if (session) {
+      userQuery['_id'] = session.user._id
+      console.log('Session found! name', name, '; engineId:', _id)
+    } else {
+      userQuery['name'] = name
+      console.log('Unauthorized! name:', name, '; engineId:', _id)
+      throw clientError('Unauthorized', 401)
+    }
+
+    await dbConnect()
     const user = await User.findOne(userQuery).populate('config').exec().catch(dbError)
     if (!user) {
       console.log('User not found with query', userQuery)
