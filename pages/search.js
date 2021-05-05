@@ -56,9 +56,8 @@ function ClientOnly({ children, hasMounted }) {
 }
 
 export default function Search(props) {
-  // const DEBUG = props.DEBUG
-  const DEBUG_LOGGING = true
-  const DEBUG_FRAMES = false
+  const DEBUG_LOGGING = props.DEBUG
+  const DEBUG_FRAMES = props.DEBUG
 
   const router = useRouter()
   const [session, sessionLoading] = useSession()
@@ -83,7 +82,7 @@ export default function Search(props) {
     q: '',
     engine: defaultEngine.current,
   })
-  const [inputKey, setInputKey] = useState(router.query?.q ?? '')
+  const [inputKey, setInputKey] = useState('')
   const [refresher, setRefresher] = useState(0)
   const [edit, setEdit] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -103,9 +102,7 @@ export default function Search(props) {
           router.query.engine
         )
         search.current.q = router.query.q
-        search.current.engine = router.query.engine
-          ? router.query.engine
-          : defaultEngine.current
+        search.current.engine = router.query.engine ? router.query.engine : defaultEngine.current
         setInputKey(router.query.q)
         setHydrated(true)
         if (router.query.edit && router.query.edit !== '0') {
@@ -149,8 +146,7 @@ export default function Search(props) {
     const handleRouteChange = (url, { shallow }) => {
       if (router.isReady) {
         const query = querystring.parse(url.split('?').slice(1).join())
-        if (DEBUG_LOGGING)
-          console.log('routeChangeStart', JSON.stringify(query, null, 2), '\nshallow:', shallow)
+        if (DEBUG_LOGGING) console.log('routeChangeStart', query, '\nshallow:', shallow)
         const newEng = query.engine ?? defaultEngine.current
         const newSearchKey = query.q ?? ''
         if (search.current.engine !== newEng) {
@@ -185,25 +181,27 @@ export default function Search(props) {
       }
       if (defaultEngine.current && defaultEngine.current !== search.current.engine) {
         if (DEBUG_LOGGING)
-          console.log(
-            'GEO API responded:',
-            search.current.engine,
-            '→',
-            defaultEngine.current
-          )
+          console.log('GEO API responded:', search.current.engine, '→', defaultEngine.current)
         handleSetEngine(defaultEngine.current)
       }
     }
   }, [geoData])
-
+  const t = useRef(Date.now())
   const handleSetSearch = (newSearchKey) => {
-    const trimmedKey = newSearchKey.trim()
-    if (DEBUG_LOGGING) console.log('handleSetSearch:', search.current.q, '→', trimmedKey)
+    if (DEBUG_LOGGING) {
+      const now = Date.now()
+      console.log('handleSetSearch invoked', now - t.current, 'ms after previous call')
+      t.current = now
+    }
 
-    if (trimmedKey === search.current.q) {
+    const trimmedKey = newSearchKey.trim()
+
+    if (trimmedKey === search.current.q || newSearchKey === search.current.q) {
+      if (DEBUG_LOGGING) console.log('REFRESH: refresher =', refresher + 1)
       setRefresher(refresher + 1)
       return
     } else if (router.isReady) {
+      if (DEBUG_LOGGING) console.log('SetSearch:', search.current.q, '→', trimmedKey)
       search.current.q = newSearchKey
       router.push(
         { pathname: router.pathname, query: { ...search.current, q: newSearchKey } },
@@ -214,11 +212,16 @@ export default function Search(props) {
       )
     }
   }
-  const debounceSetSearch = useCallback(debounce(handleSetSearch, 1000), [search.current.engine])
+  const debounceSetSearch = useCallback(debounce(handleSetSearch, 800), [search.current.engine], {
+    leading: true,
+  })
 
   const handleInputChange = (e) => {
     setInputKey(e.target.value)
-    debounceSetSearch(e.target.value)
+    if (!isMobile) {
+      // if (DEBUG_LOGGING) console.log('on input change: debounceSetSearch', e.target.value)
+      debounceSetSearch(e.target.value)
+    }
   }
 
   const handleSetEngine = (newEng) => {
@@ -285,14 +288,19 @@ export default function Search(props) {
   const currLinkIdx = useRef(0)
 
   // Keyboard shortcuts
+
   useEffect(() => {
-    function onKeyDown(e) {
-      // console.log(e.key);
+    const onKeyDown = (e) => {
+      // if (DEBUG_LOGGING) console.log('Key Pressed: ', e.key, '\tEdit Mode: ', edit)
       const key = e.key
       switch (key) {
         // Search / refresh on enter
         case 'Enter': {
-          if (!edit) handleSetSearch(inputKey)
+          if (DEBUG_LOGGING) {
+            console.log(e.key, 'Key Pressed!!: ', '\tEdit Mode: ', edit, '\tInputKey:', inputKey)
+          }
+          e.preventDefault()
+          handleSetSearch(inputKey)
           break
         }
         // Focus search bar on /
@@ -303,14 +311,14 @@ export default function Search(props) {
           }
           break
         }
-        // Unfocus search bar on escape
+        // Blur search bar on escape
         case 'Escape': {
           e.preventDefault()
           landingSearchBarRef?.current?.blur?.()
           break
         }
         case 'ArrowRight': {
-          if (document.activeElement !== landingSearchBarRef.current && !edit) {
+          if (!edit) {
             if (e.ctrlKey && e.shiftKey) {
               break
             } else if (e.ctrlKey) {
@@ -318,7 +326,7 @@ export default function Search(props) {
               e.preventDefault()
               const currEngIdx = enginesList.indexOf(search.current.engine)
               handleSetEngine(enginesList[currEngIdx + 1] ?? enginesList[0])
-            } else if (e.shiftKey) {
+            } else if (e.shiftKey && document.activeElement !== landingSearchBarRef.current) {
               // Switch to the next link on ctrl + right arrow
               e.preventDefault()
               document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
@@ -331,7 +339,7 @@ export default function Search(props) {
           break
         }
         case 'ArrowLeft': {
-          if (document.activeElement !== landingSearchBarRef.current && !edit) {
+          if (!edit) {
             if (e.ctrlKey && e.altKey) {
               break
             } else if (e.ctrlKey) {
@@ -339,7 +347,7 @@ export default function Search(props) {
               e.preventDefault()
               const currEngIdx = enginesList.indexOf(search.current.engine)
               handleSetEngine(enginesList[currEngIdx - 1] ?? enginesList[enginesList.length - 1])
-            } else if (e.shiftKey) {
+            } else if (e.shiftKey && document.activeElement !== landingSearchBarRef.current) {
               // Switch to the previous link on shift + left arrow
               e.preventDefault()
               document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
@@ -364,8 +372,8 @@ export default function Search(props) {
           break
       }
     }
-    // Open the currently focused link when shift key is released
-    function onKeyUp(e) {
+
+    const onKeyUp = (e) => {
       // console.log('Released: ', e.key);
       if (e.key === 'Shift' && document.activeElement !== landingSearchBarRef.current && !edit) {
         setDropdownVisible(false)
@@ -376,6 +384,7 @@ export default function Search(props) {
         // currLinkIdx.current = false;
       }
     }
+
     document.addEventListener('keydown', onKeyDown)
     document.addEventListener('keyup', onKeyUp)
 
@@ -383,7 +392,7 @@ export default function Search(props) {
       document.removeEventListener('keydown', onKeyDown)
       document.removeEventListener('keyup', onKeyUp)
     }
-  }, [edit])
+  }, [edit, inputKey])
 
   const [dropdownVisible, setDropdownVisible] = useState(false)
 
@@ -423,6 +432,7 @@ export default function Search(props) {
                     onChange={handleInputChange}
                     className="flex-auto ring-opacity-50 w-full h-8 rounded-sm text-black dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 rounded-r-none bg-gray-100 p-3 pr-8 text-base outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0"
                     value={inputKey}
+                    autoFocus
                   />
                   {/* Search Bar Actions */}
                   <div className="absolute text-gray-800 dark:text-gray-100 right-3 top-0 text-opacity-70 flex items-center justify-evenly space-x-4 h-full">

@@ -20,6 +20,7 @@ export async function getStaticProps(context) {
 }
 
 export default function Home(props) {
+  const DEBUG = props.DEBUG
   const [searchKey, setSearchKey] = useState('')
   const router = useRouter()
   const searchBarRef = useRef()
@@ -33,6 +34,7 @@ export default function Home(props) {
   }
   // Keyboard shortcuts
   useEffect(() => {
+    searchBarRef.current.focus()
     function onKeyDown(e) {
       // console.log(e.key);
       const key = e.key
@@ -40,18 +42,18 @@ export default function Home(props) {
         // Focus search bar on /
         case '/': {
           if (document.activeElement !== searchBarRef.current) {
-            console.log('focus')
+            if(DEBUG) console.log('focus')
             e.preventDefault()
-            searchBarRef?.current?.focus?.()
+            searchBarRef.current.focus()
           }
 
           break
         }
         // Unfocus search bar on escape
         case 'Escape': {
-          console.log('blur')
+          if (DEBUG) console.log('blur')
           e.preventDefault()
-          searchBarRef?.current?.blur?.()
+          searchBarRef.current.blur()
           break
         }
         default:
@@ -95,6 +97,7 @@ export default function Home(props) {
               onChange={(e) => setSearchKey(e.target.value)}
               className="w-full text-gray-100 sm:shadow focus:shadow-md sm:focus:shadow-xl bg-gray-100 dark:bg-gray-800 acrylic bg-opacity-40 dark:bg-opacity-50 rounded placeholder-gray-200 dark:placeholder-gray-400 h-10 p-3 text-base mb-4 sm:mb-1 bg-transparent outline-none focus:outline-none border-none focus:border-transparent ring-0 focus:ring-0"
               value={searchKey}
+              autoFocus
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleSearch()
