@@ -4,12 +4,12 @@ import { Provider } from 'next-auth/client'
 import { DefaultSeo } from 'next-seo'
 import { ThemeProvider } from 'next-themes'
 import Head from 'next/head'
-import { Router } from 'next/router'
+/* import { Router } from 'next/router'
 Router.events.on('routeChangeComplete', (url) => {
   try {
     window._hmt.push(['_trackPageview', url])
   } catch (e) {}
-})
+}) */
 export default function App({ Component, pageProps, router }) {
   return (
     <Provider session={pageProps.session}>
