@@ -37,7 +37,7 @@
     "url": "https://www.youdao.com/w/%s",
     "style": { "hex": "#E31436", "svg": null },
     "platform": { "mobile": false },
-    "slug": "you-dao",
+    "slug": "youdao",
     "embeddable": true
   },
   {
@@ -45,7 +45,7 @@
     "url": "http://m.youdao.com/dict?q=%s",
     "style": { "hex": "#E31436", "svg": null },
     "platform": { "desktop": false },
-    "slug": "you-dao",
+    "slug": "youdao",
     "embeddable": true
   },
   {
