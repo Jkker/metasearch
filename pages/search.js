@@ -56,7 +56,7 @@ function ClientOnly({ children, hasMounted }) {
 }
 
 export default function Search(props) {
-  const DEBUG_LOGGING = true
+  const DEBUG_LOGGING = props.DEBUG
   const DEBUG_FRAMES = props.DEBUG
 
   const router = useRouter()
