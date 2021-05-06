@@ -2,6 +2,6 @@
 	"name": "metasearch",
 	"version": 2,
 	"rewrites": [
-			{ "source": "/proxy/:match*", "destination": "https://www.google.com/:match*" }
+			{ "source": "/proxy/google/*", "destination": "https://www.google.com/*" }
 	]
 }
