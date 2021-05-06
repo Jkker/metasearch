@@ -1,7 +1,4 @@
 {
 	"name": "metasearch",
-	"version": 2,
-	"rewrites": [
-			{ "source": "/proxy/google/*", "destination": "https://www.google.com/*" }
-	]
+	"version": 2
 }

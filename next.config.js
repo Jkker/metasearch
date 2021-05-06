@@ -1,8 +1,8 @@
-const withPWA = require('next-pwa');
+const withPWA = require('next-pwa')
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-	enabled: process.env.ANALYZE === 'true',
-});
+  enabled: process.env.ANALYZE === 'true',
+})
 
 module.exports = withBundleAnalyzer(
   withPWA({
@@ -19,6 +19,10 @@ module.exports = withBundleAnalyzer(
       register: true,
       scope: '/',
     },
+    rewrites: [
+      { source: '/proxy/google/*', destination: 'https://www.google.com/*' },
+      { source: '/proxy/any/:param*', destination: 'https://:param*' },
+    ],
     webpack: (config, { dev, isServer }) => {
       config.module.rules.push({
         test: /\.(png|jpe?g|gif|mp4)$/i,
