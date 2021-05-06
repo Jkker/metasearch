@@ -19,10 +19,14 @@ module.exports = withBundleAnalyzer(
       register: true,
       scope: '/',
     },
-    rewrites: [
-      { source: '/proxy/google/*', destination: 'https://www.google.com/*' },
-      { source: '/proxy/any/:param*', destination: 'https://:param*' },
-    ],
+    async rewrites() {
+      return [
+        { source: '/proxy/google/*', destination: 'https://www.google.com/*' },
+        { source: '/proxy/youtube/*', destination: 'https://www.youtube.com/*' },
+        { source: '/proxy/github/*', destination: 'https://github.com/*' },
+        { source: '/proxy/any/:param*', destination: 'https://:param*' },
+      ]
+    },
     webpack: (config, { dev, isServer }) => {
       config.module.rules.push({
         test: /\.(png|jpe?g|gif|mp4)$/i,

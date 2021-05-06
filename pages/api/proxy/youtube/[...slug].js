@@ -2,9 +2,9 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
 
 // Create proxy instance outside of request handler function to avoid unnecessary re-creation
 const apiProxy = createProxyMiddleware({
-  target: 'https://search.jerrykjia.com',
+  target: 'https://www.youtube.com',
   changeOrigin: true,
-  pathRewrite: { [`^/api/proxy`]: '' },
+  pathRewrite: { [`^/api/proxy/youtube`]: '' },
   secure: false,
 })
 
