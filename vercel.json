@@ -1,4 +1,7 @@
 {
 	"name": "metasearch",
-	"version": 2
+	"version": 2,
+	"rewrites": [
+			{ "source": "/proxy/:match*", "destination": "https://:match*" }
+	]
 }
