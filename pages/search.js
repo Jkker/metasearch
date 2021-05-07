@@ -299,7 +299,7 @@ export default function Search(props) {
       switch (key) {
         // Search / refresh on enter
         case 'Enter': {
-          if (!edit) break
+          if (edit) break
           if (currLinkIdx.current === false) {
             e.preventDefault()
             document?.activeElement?.click?.()
@@ -334,12 +334,16 @@ export default function Search(props) {
             } else if (e.altKey) {
               // Switch to the next link on ctrl + right arrow
               e.preventDefault()
-              if (currLinkIdx === false) currLinkIdx.current = 0
-              document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
-              const nextIdx =
-                currLinkIdx.current + 1 >= linksList.length ? 0 : currLinkIdx.current + 1
-              currLinkIdx.current = nextIdx
-              document.getElementById(linksList[nextIdx] + '-link')?.focus()
+              if (currLinkIdx === false) {
+                currLinkIdx.current = 0
+                document.getElementById(linksList[0] + '-link')?.focus()
+              } else {
+                document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
+                const nextIdx =
+                  currLinkIdx.current + 1 >= linksList.length ? 0 : currLinkIdx.current + 1
+                currLinkIdx.current = nextIdx
+                document.getElementById(linksList[nextIdx] + '-link')?.focus()
+              }
             }
           }
           break
@@ -354,48 +358,27 @@ export default function Search(props) {
             } else if (e.altKey) {
               // Switch to the previous link on shift + left arrow
               e.preventDefault()
-              if (currLinkIdx === false) currLinkIdx.current = 0
-              document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
-              const nextIdx =
-                currLinkIdx.current - 1 < 0 ? linksList.length - 1 : currLinkIdx.current - 1
-              currLinkIdx.current = nextIdx
-              document.getElementById(linksList[nextIdx] + '-link')?.focus()
+              if (currLinkIdx === false) {
+                currLinkIdx.current = 0
+                document.getElementById(linksList[0] + '-link')?.focus()
+              } else {
+                document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
+                const nextIdx =
+                  currLinkIdx.current - 1 < 0 ? linksList.length - 1 : currLinkIdx.current - 1
+                currLinkIdx.current = nextIdx
+                document.getElementById(linksList[nextIdx] + '-link')?.focus()
+              }
             }
           }
           break
         }
-        /* // Auto focus on the 1st link
-        case 'Shift': {
-          if (document.activeElement !== landingSearchBarRef.current && !edit) {
-            e.preventDefault()
-            // currLinkIdx.current = 0;
-            setDropdownVisible(true)
-            document.getElementById(linksList[currLinkIdx.current] + '-link')?.focus()
-          }
-        } */
         default:
           break
       }
     }
-
-    /* const onKeyUp = (e) => {
-      // console.log('Released: ', e.key);
-      if (e.key === 'Shift' && document.activeElement !== landingSearchBarRef.current && !edit) {
-        setDropdownVisible(false)
-        e.preventDefault()
-        const currLink = document.getElementById(linksList[currLinkIdx.current] + '-link')
-        currLink.click()
-        currLink.blur()
-        // currLinkIdx.current = false;
-      }
-    }
- */
     document.addEventListener('keydown', onKeyDown)
-    // document.addEventListener('keyup', onKeyUp)
-
     return () => {
       document.removeEventListener('keydown', onKeyDown)
-      // document.removeEventListener('keyup', onKeyUp)
     }
   }, [edit, inputKey])
 
