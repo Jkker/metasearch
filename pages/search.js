@@ -298,17 +298,17 @@ export default function Search(props) {
       }
       switch (key) {
         // Search / refresh on enter
-        case 'Enter': {
-          if (edit) break
-          if (currLinkIdx.current === false) {
-            e.preventDefault()
-            document?.activeElement?.click?.()
-          } else {
-            e.preventDefault()
-            handleSetSearch(inputKey)
+        case 'Enter':
+          if (!edit) {
+            if (currLinkIdx.current !== false) {
+              e.preventDefault()
+              document?.activeElement?.click?.()
+            } else {
+              e.preventDefault()
+              handleSetSearch(inputKey)
+            }
+            break
           }
-          break
-        }
         // Focus search bar on /
         case '/': {
           if (document.activeElement !== landingSearchBarRef.current && !edit) {
@@ -334,7 +334,7 @@ export default function Search(props) {
             } else if (e.altKey) {
               // Switch to the next link on ctrl + right arrow
               e.preventDefault()
-              if (currLinkIdx === false) {
+              if (currLinkIdx.current === false) {
                 currLinkIdx.current = 0
                 document.getElementById(linksList[0] + '-link')?.focus()
               } else {
@@ -358,7 +358,7 @@ export default function Search(props) {
             } else if (e.altKey) {
               // Switch to the previous link on shift + left arrow
               e.preventDefault()
-              if (currLinkIdx === false) {
+              if (currLinkIdx.current === false) {
                 currLinkIdx.current = 0
                 document.getElementById(linksList[0] + '-link')?.focus()
               } else {
