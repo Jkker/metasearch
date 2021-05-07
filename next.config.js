@@ -21,10 +21,10 @@ module.exports = withBundleAnalyzer(
     },
     async rewrites() {
       return [
-        { source: '/proxy/google/:param*', destination: 'https://www.google.com/:param*' },
-        { source: '/proxy/youtube/:param*', destination: 'https://www.youtube.com/:param*' },
-        { source: '/proxy/github/:param*', destination: 'https://github.com/:param*' },
-        { source: '/proxy/any/:param*', destination: 'https://:param*' },
+        { source: '/proxy/google/:slug*', destination: 'https://www.google.com/:slug*' },
+        { source: '/proxy/youtube/:slug*', destination: 'https://www.youtube.com/:slug*' },
+        { source: '/proxy/github/:slug*', destination: 'https://github.com/:slug*' },
+        // { source: '/proxy/any/:slug*', destination: 'https://:slug*' },
       ]
     },
     webpack: (config, { dev, isServer }) => {
@@ -46,7 +46,7 @@ module.exports = withBundleAnalyzer(
         use: ['@svgr/webpack'],
       })
 
-      /:param* 	if (!dev && !isServer) {
+      /:slug* 	if (!dev && !isServer) {
 				// Replace React with Preact only in client production build
 				Object.assign(config.resolve.alias, {
 					react: 'preact/compat',
