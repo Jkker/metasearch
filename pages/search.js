@@ -285,7 +285,7 @@ export default function Search(props) {
 
   const enginesList = frames.map(({ title }) => title)
   const linksList = links.map(({ title }) => title)
-  const currLinkIdx = useRef(0)
+  const currLinkIdx = useRef(false)
 
   // Keyboard shortcuts
 
@@ -293,14 +293,20 @@ export default function Search(props) {
     const onKeyDown = (e) => {
       // if (DEBUG_LOGGING) console.log('Key Pressed: ', e.key, '\tEdit Mode: ', edit)
       const key = e.key
+      if (DEBUG_LOGGING) {
+        console.log(e.key, 'Key Pressed!!: ', '\tEdit Mode: ', edit, '\tInputKey:', inputKey)
+      }
       switch (key) {
         // Search / refresh on enter
         case 'Enter': {
-          if (DEBUG_LOGGING) {
-            console.log(e.key, 'Key Pressed!!: ', '\tEdit Mode: ', edit, '\tInputKey:', inputKey)
+          if (!edit) break
+          if (currLinkIdx.current === false) {
+            e.preventDefault()
+            document?.activeElement?.click?.()
+          } else {
+            e.preventDefault()
+            handleSetSearch(inputKey)
           }
-          e.preventDefault()
-          handleSetSearch(inputKey)
           break
         }
         // Focus search bar on /
@@ -314,7 +320,8 @@ export default function Search(props) {
         // Blur search bar on escape
         case 'Escape': {
           e.preventDefault()
-          landingSearchBarRef?.current?.blur?.()
+          currLinkIdx.current = false
+          document?.activeElement?.blur?.()
           break
         }
         case ']': {
@@ -324,13 +331,10 @@ export default function Search(props) {
               e.preventDefault()
               const currEngIdx = enginesList.indexOf(search.current.engine)
               handleSetEngine(enginesList[currEngIdx + 1] ?? enginesList[0])
-            } else if (
-              e.ctrlKey &&
-              e.shiftKey &&
-              document.activeElement !== landingSearchBarRef.current
-            ) {
+            } else if (e.altKey) {
               // Switch to the next link on ctrl + right arrow
               e.preventDefault()
+              if (currLinkIdx === false) currLinkIdx.current = 0
               document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
               const nextIdx =
                 currLinkIdx.current + 1 >= linksList.length ? 0 : currLinkIdx.current + 1
@@ -347,13 +351,10 @@ export default function Search(props) {
               e.preventDefault()
               const currEngIdx = enginesList.indexOf(search.current.engine)
               handleSetEngine(enginesList[currEngIdx - 1] ?? enginesList[enginesList.length - 1])
-            } else if (
-              e.ctrlKey &&
-              e.shiftKey &&
-              document.activeElement !== landingSearchBarRef.current
-            ) {
+            } else if (e.altKey) {
               // Switch to the previous link on shift + left arrow
               e.preventDefault()
+              if (currLinkIdx === false) currLinkIdx.current = 0
               document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
               const nextIdx =
                 currLinkIdx.current - 1 < 0 ? linksList.length - 1 : currLinkIdx.current - 1
@@ -363,7 +364,7 @@ export default function Search(props) {
           }
           break
         }
-        // Auto focus on the 1st link
+        /* // Auto focus on the 1st link
         case 'Shift': {
           if (document.activeElement !== landingSearchBarRef.current && !edit) {
             e.preventDefault()
@@ -371,13 +372,13 @@ export default function Search(props) {
             setDropdownVisible(true)
             document.getElementById(linksList[currLinkIdx.current] + '-link')?.focus()
           }
-        }
+        } */
         default:
           break
       }
     }
 
-    const onKeyUp = (e) => {
+    /* const onKeyUp = (e) => {
       // console.log('Released: ', e.key);
       if (e.key === 'Shift' && document.activeElement !== landingSearchBarRef.current && !edit) {
         setDropdownVisible(false)
@@ -388,13 +389,13 @@ export default function Search(props) {
         // currLinkIdx.current = false;
       }
     }
-
+ */
     document.addEventListener('keydown', onKeyDown)
-    document.addEventListener('keyup', onKeyUp)
+    // document.addEventListener('keyup', onKeyUp)
 
     return () => {
       document.removeEventListener('keydown', onKeyDown)
-      document.removeEventListener('keyup', onKeyUp)
+      // document.removeEventListener('keyup', onKeyUp)
     }
   }, [edit, inputKey])
 
