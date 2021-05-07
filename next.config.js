@@ -19,14 +19,6 @@ module.exports = withBundleAnalyzer(
       register: true,
       scope: '/',
     },
-    /* async rewrites() {
-      return [
-        { source: '/proxy/google/:slug*', destination: 'https://www.google.com/:slug*' },
-        { source: '/proxy/youtube/:slug*', destination: 'https://www.youtube.com/:slug*' },
-        { source: '/proxy/github/:slug*', destination: 'https://github.com/:slug*' },
-        // { source: '/proxy/any/:slug*', destination: 'https://:slug*' },
-      ]
-    }, */
     webpack: (config, { dev, isServer }) => {
       config.module.rules.push({
         test: /\.(png|jpe?g|gif|mp4)$/i,
