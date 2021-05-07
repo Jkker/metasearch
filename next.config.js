@@ -19,6 +19,14 @@ module.exports = withBundleAnalyzer(
       register: true,
       scope: '/',
     },
+    async rewrites() {
+      return [
+        { source: '/proxy/google/:param*', destination: 'https://www.google.com/:param*' },
+        { source: '/proxy/youtube/:param*', destination: 'https://www.youtube.com/:param*' },
+        { source: '/proxy/github/:param*', destination: 'https://github.com/:param*' },
+        { source: '/proxy/any/:param*', destination: 'https://:param*' },
+      ]
+    },
     webpack: (config, { dev, isServer }) => {
       config.module.rules.push({
         test: /\.(png|jpe?g|gif|mp4)$/i,
@@ -38,14 +46,14 @@ module.exports = withBundleAnalyzer(
         use: ['@svgr/webpack'],
       })
 
-      /:slug* 	if (!dev && !isServer) {
+      /*       if (!dev && !isServer) {
 				// Replace React with Preact only in client production build
 				Object.assign(config.resolve.alias, {
 					react: 'preact/compat',
 					'react-dom/test-utils': 'preact/test-utils',
 					'react-dom': 'preact/compat',
 				});
-			} */
+			}  */
       return config
     },
   })
