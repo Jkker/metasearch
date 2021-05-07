@@ -317,16 +317,18 @@ export default function Search(props) {
           landingSearchBarRef?.current?.blur?.()
           break
         }
-        case 'ArrowRight': {
+        case ']': {
           if (!edit) {
-            if (e.ctrlKey && e.shiftKey) {
-              break
-            } else if (e.ctrlKey) {
+            if (e.ctrlKey && !e.shiftKey) {
               // Switch to the next tab on ctrl + right arrow
               e.preventDefault()
               const currEngIdx = enginesList.indexOf(search.current.engine)
               handleSetEngine(enginesList[currEngIdx + 1] ?? enginesList[0])
-            } else if (e.shiftKey && document.activeElement !== landingSearchBarRef.current) {
+            } else if (
+              e.ctrlKey &&
+              e.shiftKey &&
+              document.activeElement !== landingSearchBarRef.current
+            ) {
               // Switch to the next link on ctrl + right arrow
               e.preventDefault()
               document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
@@ -338,16 +340,18 @@ export default function Search(props) {
           }
           break
         }
-        case 'ArrowLeft': {
+        case '[': {
           if (!edit) {
-            if (e.ctrlKey && e.altKey) {
-              break
-            } else if (e.ctrlKey) {
+            if (e.ctrlKey && !e.shiftKey) {
               // Switch to the previous tab on ctrl + left arrow
               e.preventDefault()
               const currEngIdx = enginesList.indexOf(search.current.engine)
               handleSetEngine(enginesList[currEngIdx - 1] ?? enginesList[enginesList.length - 1])
-            } else if (e.shiftKey && document.activeElement !== landingSearchBarRef.current) {
+            } else if (
+              e.ctrlKey &&
+              e.shiftKey &&
+              document.activeElement !== landingSearchBarRef.current
+            ) {
               // Switch to the previous link on shift + left arrow
               e.preventDefault()
               document.getElementById(linksList[currLinkIdx.current] + '-link')?.blur()
